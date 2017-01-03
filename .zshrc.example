@@ -1,13 +1,7 @@
-# Required by the oh-my-zsh 'git' plugin
-# Adds a significant amount of time to shell startup
-# autoload -Uz compinit
-# compinit
-
 source "${HOME}/.zgen/zgen.zsh"
 # if the init scipt doesn't exist
 if ! zgen saved; then
-
-  # Include default modules:
+  # Include default plugins:
   # environment
   # terminal
   # editor
@@ -19,29 +13,19 @@ if ! zgen saved; then
   # prompt
   zgen prezto
 
-  # Extra modules
+  # Extra plugins
   zgen prezto git
   zgen prezto fasd
   zgen prezto history-substring-search
 
-  # 3rd Party Modules
+  # 3rd Party plugins
   zgen load brandon-fryslie/git-taculous-zsh-theme git-taculous
-  zgen load rupa/z
   zgen load lukechilds/zsh-nvm
   zgen load zsh-users/zsh-syntax-highlighting
   zgen load zsh-users/zsh-autosuggestions
   zgen load zsh-users/zsh-completions
   zgen load zsh-users/zaw
-
-  zgen load RallySoftware/oh-my-zsh-custom plugins/alm
-  zgen load RallySoftware/oh-my-zsh-custom plugins/appsdk
   zgen load robbyrussell/oh-my-zsh plugins/docker
-  zgen load RallySoftware/oh-my-zsh-custom plugins/docker-alm
-  zgen load RallySoftware/oh-my-zsh-custom plugins/emacs
-  zgen load RallySoftware/oh-my-zsh-custom plugins/realtime
-
-  # Requires compinit to be called above
-  # zgen load RallySoftware/oh-my-zsh-custom plugins/git
 
   zgen save
 fi
