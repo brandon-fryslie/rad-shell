@@ -28,6 +28,7 @@ if ! zgen saved; then
 
   zgen load brandon-fryslie/rad-shell git
   zgen load brandon-fryslie/rad-shell shell-customize
+  zgen load brandon-fryslie/rad-shell shell-tools
   zgen load brandon-fryslie/rad-shell zaw
 
   # Theme

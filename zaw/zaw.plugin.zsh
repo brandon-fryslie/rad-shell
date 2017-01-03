@@ -1,7 +1,6 @@
 # Configure Zaw
 bindkey '^X' zaw
 bindkey '^R^R' zaw-history
-bindkey "^e" accept-line
 zstyle ':filter-select' max-lines 10
 zstyle ':filter-select' max-lines -10
 zstyle ':filter-select' hist-find-no-dups yes
