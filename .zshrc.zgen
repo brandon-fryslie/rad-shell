@@ -19,41 +19,19 @@ if ! zgen saved; then
   zgen prezto history-substring-search
 
   # 3rd Party plugins
-  zgen load brandon-fryslie/git-taculous-zsh-theme git-taculous
   zgen load lukechilds/zsh-nvm
-  zgen load zsh-users/zsh-syntax-highlighting
+  zgen load robbyrussell/oh-my-zsh plugins/docker
+  zgen load zsh-users/zaw
   zgen load zsh-users/zsh-autosuggestions
   zgen load zsh-users/zsh-completions
-  zgen load zsh-users/zaw
-  zgen load robbyrussell/oh-my-zsh plugins/docker
+  zgen load zsh-users/zsh-syntax-highlighting
+
+  zgen load brandon-fryslie/rad-shell git
+  zgen load brandon-fryslie/rad-shell shell-customize
+  zgen load brandon-fryslie/rad-shell zaw
+
+  # Theme
+  zgen load brandon-fryslie/git-taculous-zsh-theme git-taculous
 
   zgen save
 fi
-
-# Colors
-zstyle ':prezto:*:*' color 'yes'
-zstyle ':completion:*:default' list-colors ''
-export CLICOLOR=1
-export LSCOLORS=gxfxcxdxbxegedabagacad
-
-# Enable prompts in git-taculous theme
-ENABLE_NODE_PROMPT=true
-ENABLE_DOCKER_PROMPT=true
-
-# Share history between terminal windows
-setopt inc_append_history
-setopt share_history
-
-# Configure Zaw
-bindkey '^X' zaw
-bindkey '^R^R' zaw-history
-bindkey "^e" accept-line
-zstyle ':filter-select' max-lines 10
-zstyle ':filter-select' max-lines -10
-zstyle ':filter-select' hist-find-no-dups yes
-zstyle ':filter-select' extended-search yes
-zstyle ':filter-select' case-insensitive yes
-zstyle ':filter-select' rotate-list yes
-zstyle ':filter-select:highlight' selected fg=cyan,underline
-zstyle ':filter-select:highlight' matched fg=yellow
-zstyle ':filter-select:highlight' title fg=yellow,underline

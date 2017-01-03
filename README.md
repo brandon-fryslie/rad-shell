@@ -44,5 +44,5 @@ If you change your .zshrc file, you will need to run `zgen reset` so Zgen
 can regenerate the static configuration file.
 
 Zgen will clone the plugin repos to a local directory.  To pull upstream changes,
-run `zgen update && zgen reset`.  Zgen will pull the latest changes in all repos
+run `zgen update`.  Zgen will pull the latest changes in all repos
 and then regenerate the init file the next time a shell is opened.
