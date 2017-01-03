@@ -46,3 +46,9 @@ can regenerate the static configuration file.
 Zgen will clone the plugin repos to a local directory.  To pull upstream changes,
 run `zgen update`.  Zgen will pull the latest changes in all repos
 and then regenerate the init file the next time a shell is opened.
+
+## Caveats
+
+Directly sourcing your .zshrc file will cause the current shell to exit, for
+some unknown reason.  Pull requests for a fix are welcome.  As a workaround,
+open a new shell rather than using `source ~/.zshrc`.
