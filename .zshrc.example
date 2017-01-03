@@ -1,3 +1,8 @@
+# Required by the oh-my-zsh 'git' plugin
+# Adds a significant amount of time to shell startup
+# autoload -Uz compinit
+# compinit
+
 source "${HOME}/.zgen/zgen.zsh"
 # if the init scipt doesn't exist
 if ! zgen saved; then
@@ -16,17 +21,27 @@ if ! zgen saved; then
 
   # Extra modules
   zgen prezto git
-  zgen prezto command-not-found
   zgen prezto fasd
   zgen prezto history-substring-search
 
   # 3rd Party Modules
   zgen load brandon-fryslie/git-taculous-zsh-theme git-taculous
+  zgen load rupa/z
   zgen load lukechilds/zsh-nvm
   zgen load zsh-users/zsh-syntax-highlighting
   zgen load zsh-users/zsh-autosuggestions
   zgen load zsh-users/zsh-completions
   zgen load zsh-users/zaw
+
+  zgen load RallySoftware/oh-my-zsh-custom plugins/alm
+  zgen load RallySoftware/oh-my-zsh-custom plugins/appsdk
+  zgen load robbyrussell/oh-my-zsh plugins/docker
+  zgen load RallySoftware/oh-my-zsh-custom plugins/docker-alm
+  zgen load RallySoftware/oh-my-zsh-custom plugins/emacs
+  zgen load RallySoftware/oh-my-zsh-custom plugins/realtime
+
+  # Requires compinit to be called above
+  # zgen load RallySoftware/oh-my-zsh-custom plugins/git
 
   zgen save
 fi
@@ -44,3 +59,17 @@ ENABLE_DOCKER_PROMPT=true
 # Share history between terminal windows
 setopt inc_append_history
 setopt share_history
+
+# Configure Zaw
+bindkey '^X' zaw
+bindkey '^R^R' zaw-history
+bindkey "^e" accept-line
+zstyle ':filter-select' max-lines 10
+zstyle ':filter-select' max-lines -10
+zstyle ':filter-select' hist-find-no-dups yes
+zstyle ':filter-select' extended-search yes
+zstyle ':filter-select' case-insensitive yes
+zstyle ':filter-select' rotate-list yes
+zstyle ':filter-select:highlight' selected fg=cyan,underline
+zstyle ':filter-select:highlight' matched fg=yellow
+zstyle ':filter-select:highlight' title fg=yellow,underline
