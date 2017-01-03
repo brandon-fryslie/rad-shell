@@ -1,0 +1,46 @@
+source "${HOME}/.zgen/zgen.zsh"
+# if the init scipt doesn't exist
+if ! zgen saved; then
+
+  # Include default modules:
+  # environment
+  # terminal
+  # editor
+  # helper
+  # history
+  # directory
+  # utility
+  # completion
+  # prompt
+  zgen prezto
+
+  # Extra modules
+  zgen prezto git
+  zgen prezto command-not-found
+  zgen prezto fasd
+  zgen prezto history-substring-search
+
+  # 3rd Party Modules
+  zgen load brandon-fryslie/git-taculous-zsh-theme git-taculous
+  zgen load lukechilds/zsh-nvm
+  zgen load zsh-users/zsh-syntax-highlighting
+  zgen load zsh-users/zsh-autosuggestions
+  zgen load zsh-users/zsh-completions
+  zgen load zsh-users/zaw
+
+  zgen save
+fi
+
+# Colors
+zstyle ':prezto:*:*' color 'yes'
+zstyle ':completion:*:default' list-colors ''
+export CLICOLOR=1
+export LSCOLORS=gxfxcxdxbxegedabagacad
+
+# Enable prompts in git-taculous theme
+ENABLE_NODE_PROMPT=true
+ENABLE_DOCKER_PROMPT=true
+
+# Share history between terminal windows
+setopt inc_append_history
+setopt share_history
