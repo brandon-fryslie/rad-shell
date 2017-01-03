@@ -59,11 +59,6 @@ if $options[:mode] == 'clean'
   end
 end
 
-# install:
-# Switch default shell to zsh
-# Install Zgen
-# copy .zshrc.example
-# Install fasd
 if $options[:mode] == 'install'
   if File.exist?("#{ENV['HOME']}/.zshrc")
     puts "Backing up existing #{ENV['HOME']}/.zshrc -> #{ENV['HOME']}/.zshrc.bak"
@@ -75,7 +70,7 @@ if $options[:mode] == 'install'
     puts `mv #{ENV['HOME']}/.zshrc.rad #{ENV['HOME']}/.zshrc`
   else
     puts "Copying default .zshrc -> #{ENV['HOME']}/.zshrc"
-    zshrc_path = "#{File.expand_path(File.dirname(__FILE__))}/.zshrc.example"
+    zshrc_path = "#{File.expand_path(File.dirname(__FILE__))}/.zshrc.zgen"
     puts `cp #{zshrc_path} #{ENV['HOME']}/.zshrc`
   end
 

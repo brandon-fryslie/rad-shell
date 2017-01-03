@@ -28,11 +28,21 @@ The example .zshrc file includes several great plugins by default:
 
 ## Installation
 
-Run `install.rb`, or set your default shell to Zsh, and install Zgen manually
-using the instructions on the Zgen website.  Then copy over the `.zshrc.example`
-file to `~/.zshrc`.
+2 choices:
+
+Run `install.rb`
+
+or
+
+Set your default shell to Zsh, install Zgen manually
+using the instructions on the Zgen website and then copy over the `.zshrc.zgen`
+file from this repo to `~/.zshrc`.
 
 ## Usage
 
 If you change your .zshrc file, you will need to run `zgen reset` so Zgen
 can regenerate the static configuration file.
+
+Zgen will clone the plugin repos to a local directory.  To pull upstream changes,
+run `zgen update && zgen reset`.  Zgen will pull the latest changes in all repos
+and then regenerate the init file the next time a shell is opened.
