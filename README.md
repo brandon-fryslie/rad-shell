@@ -30,7 +30,7 @@ The example .zshrc file includes several great plugins by default:
 
 2 choices:
 
-Run `install.rb`
+Clone this repo, then run `install.rb`
 
 or
 
