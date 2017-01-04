@@ -30,13 +30,14 @@ The example .zshrc file includes several great plugins by default:
 
 2 choices:
 
-Clone this repo, then run `install.rb`
+1.  Set Zsh as your default shell: `chsh -s /bin/zsh`
+2.  Clone this repo, then run `install.rb`
 
 or
 
-Set your default shell to Zsh, install Zgen manually
-using the instructions on the Zgen website and then copy over the `.zshrc.zgen`
-file from this repo to `~/.zshrc`.
+1.  Set Zsh as your default shell: `chsh -s /bin/zsh`
+2.  Install Zgen manually following instructions on the Zgen website
+3.  Copy `.zshrc.zgen` from this repo to `~/.zshrc`
 
 ## Usage
 

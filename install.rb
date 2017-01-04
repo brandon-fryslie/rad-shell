@@ -38,8 +38,8 @@ puts "Mode: #{$options[:mode]}".cyan
 
 if $options[:mode] == 'clean'
   if File.exist?("#{ENV['HOME']}/.zshrc")
-    puts "Moving existing #{ENV['HOME']}/.zshrc to #{ENV['HOME']}/.zshrc.rad...".yellow
-    puts `mv #{ENV['HOME']}/.zshrc #{ENV['HOME']}/.zshrc.rad`
+    puts "Moving existing #{ENV['HOME']}/.zshrc to #{ENV['HOME']}/.zshrc.zgen...".yellow
+    puts `mv #{ENV['HOME']}/.zshrc #{ENV['HOME']}/.zshrc.zgen`
   end
 
   if File.exist?("#{ENV['HOME']}/.zshrc.bak")
@@ -65,9 +65,9 @@ if $options[:mode] == 'install'
     puts `mv #{ENV['HOME']}/.zshrc #{ENV['HOME']}/.zshrc.bak`
   end
 
-  if File.exist?("#{ENV['HOME']}/.zshrc.rad")
-    puts "Restoring existing #{ENV['HOME']}/.zshrc.rad -> #{ENV['HOME']}/.zshrc"
-    puts `mv #{ENV['HOME']}/.zshrc.rad #{ENV['HOME']}/.zshrc`
+  if File.exist?("#{ENV['HOME']}/.zshrc.zgen")
+    puts "Restoring existing #{ENV['HOME']}/.zshrc.zgen -> #{ENV['HOME']}/.zshrc"
+    puts `mv #{ENV['HOME']}/.zshrc.zgen #{ENV['HOME']}/.zshrc`
   else
     puts "Copying default .zshrc -> #{ENV['HOME']}/.zshrc"
     zshrc_path = "#{File.expand_path(File.dirname(__FILE__))}/.zshrc.zgen"
