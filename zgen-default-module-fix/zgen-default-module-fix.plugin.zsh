@@ -4,6 +4,5 @@
 # ourselves
 # See: https://github.com/tarjoilija/zgen/issues/74
 for module in "environment" "terminal" "editor" "history" "directory" "spectrum" "utility" "completion" "prompt" "fasd"; do
-  echo "Initing module $module"
   zstyle ":prezto:module:$module" loaded 'yes'
 done
