@@ -20,6 +20,10 @@ if ! zgen saved; then
   zgen load sorin-ionescu/prezto modules/completion
   zgen load sorin-ionescu/prezto modules/prompt
 
+  # Tell prezto we have loaded the default plugins
+  # This needs to be right after the default plugins are loaded
+  zgen load brandon-fryslie/rad-shell zgen-default-module-fix
+
   # Extra plugins
   zgen load sorin-ionescu/prezto modules/git
   zgen load sorin-ionescu/prezto modules/fasd
