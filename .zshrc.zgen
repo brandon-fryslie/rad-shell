@@ -1,22 +1,29 @@
 source "${HOME}/.zgen/zgen.zsh"
 # if the init scipt doesn't exist
 if ! zgen saved; then
-  # Include default plugins:
-  # environment
-  # terminal
-  # editor
-  # helper
-  # history
-  # directory
-  # utility
-  # completion
-  # prompt
+  # Disable loading default Prezto modules
+  # This is necessary due to a quirk of zgen that will load these plugins after
+  # our custom plugins, overwriting our customizations
+  # https://github.com/tarjoilija/zgen/issues/74
+  export ZGEN_PREZTO_LOAD_DEFAULT=0
+
   zgen prezto
 
+  # Default plugins
+  zgen load sorin-ionescu/prezto modules/environment
+  zgen load sorin-ionescu/prezto modules/terminal
+  zgen load sorin-ionescu/prezto modules/editor
+  zgen load sorin-ionescu/prezto modules/history
+  zgen load sorin-ionescu/prezto modules/directory
+  zgen load sorin-ionescu/prezto modules/spectrum
+  zgen load sorin-ionescu/prezto modules/utility
+  zgen load sorin-ionescu/prezto modules/completion
+  zgen load sorin-ionescu/prezto modules/prompt
+
   # Extra plugins
-  zgen prezto git
-  zgen prezto fasd
-  zgen prezto history-substring-search
+  zgen load sorin-ionescu/prezto modules/git
+  zgen load sorin-ionescu/prezto modules/fasd
+  zgen load sorin-ionescu/prezto modules/history-substring-search
 
   # 3rd Party plugins
   zgen load lukechilds/zsh-nvm
