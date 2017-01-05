@@ -33,23 +33,32 @@ def parse_opts
 end
 
 $options = parse_opts
+RAD_DIR=File.expand_path(File.dirname(__FILE__))
 
 puts "Mode: #{$options[:mode]}".cyan
 
 if $options[:mode] == 'clean'
+  # Back up current .zshrc and .zgen-setup.zsh
   if File.exist?("#{ENV['HOME']}/.zshrc")
     puts "Moving existing #{ENV['HOME']}/.zshrc to #{ENV['HOME']}/.zshrc.zgen...".yellow
     puts `mv #{ENV['HOME']}/.zshrc #{ENV['HOME']}/.zshrc.zgen`
   end
+  if File.exist?("#{ENV['HOME']}/.zshrc")
+    puts "Moving existing #{ENV['HOME']}/.zgen-setup.zsh to #{ENV['HOME']}/.zgen-setup.zsh.bak...".yellow
+    puts `mv #{ENV['HOME']}/.zgen-setup.zsh #{ENV['HOME']}/.zgen-setup.zsh.bak`
+  end
 
+  # Restore any backup .zshrc
   if File.exist?("#{ENV['HOME']}/.zshrc.bak")
     puts "Restoring #{ENV['HOME']}/.zshrc.bak -> #{ENV['HOME']}/.zshrc"
     puts `mv #{ENV['HOME']}/.zshrc.bak #{ENV['HOME']}/.zshrc`
   end
 
+  # Remove Zgen
   puts "Removing Zgen at #{$options[:zgen_dir]}...".yellow
   puts `rm -rf #{$options[:zgen_dir]}`
 
+  # Remove fasd
   `which fasd`
   if $? == 0
     puts "Uninstalling fasd with 'brew uninstall fasd'...".yellow
@@ -65,14 +74,12 @@ if $options[:mode] == 'install'
     puts `mv #{ENV['HOME']}/.zshrc #{ENV['HOME']}/.zshrc.bak`
   end
 
-  if File.exist?("#{ENV['HOME']}/.zshrc.zgen")
-    puts "Restoring existing #{ENV['HOME']}/.zshrc.zgen -> #{ENV['HOME']}/.zshrc"
-    puts `mv #{ENV['HOME']}/.zshrc.zgen #{ENV['HOME']}/.zshrc`
-  else
-    puts "Copying default .zshrc -> #{ENV['HOME']}/.zshrc"
-    zshrc_path = "#{File.expand_path(File.dirname(__FILE__))}/.zshrc.zgen"
-    puts `cp #{zshrc_path} #{ENV['HOME']}/.zshrc`
-  end
+  # Copy default .zgen-setup and .zshrc
+  puts "Copying default .zshrc and .zgen-setup.zsh -> #{ENV['HOME']}"
+  zgen_setup_path = "#{RAD_DIR}/.zgen-setup.zsh"
+  zshrc_path = "#{RAD_DIR}/.zshrc.zgen"
+  puts `cp #{zshrc_path} #{ENV['HOME']}/.zshrc`
+  puts `cp #{zgen_setup_path} #{ENV['HOME']}`
 
   if !File.exist?("#{$options[:zgen_dir]}")
     puts "Cloning Zgen into #{$options[:zgen_dir]}...".yellow
