@@ -17,3 +17,6 @@ setopt HIST_REDUCE_BLANKS
 HISTFILE=~/.zsh_history
 HISTSIZE=99999999
 SAVEHIST=$HISTSIZE
+
+# Just so we have something
+export EDITOR=vi

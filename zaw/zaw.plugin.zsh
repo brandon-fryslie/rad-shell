@@ -12,15 +12,19 @@ zstyle ':filter-select:highlight' matched fg=yellow
 zstyle ':filter-select:highlight' title fg=yellow,underline
 
 # Key bindings
-bindkey '^X' zaw
+bindkey '^[Z' zaw
 bindkey '^R^R' zaw-history
+bindkey '^[D' zaw-fasd-directories
+bindkey '^[F' zaw-fasd-files
+bindkey '^[B' zaw-git-branches
+bindkey '^[O' zaw-git-files
+bindkey '^[L' zaw-git-log
+bindkey '^[R' zaw-git-reflog
+bindkey '^[S' zaw-git-status
 
 # These bindings take effect when using zaw
-
-# accept-line puts the line into the prompt without executing it
-# accept-search executes it immediately
-bindkey -M filterselect '^[^M' accept-line # Escape + Enter
-bindkey -M filterselect '^M' accept-search # Enter
+bindkey -M filterselect '^M' accept-line # Enter
+bindkey -M filterselect '^[^M' accept-search # Escape + Enter
 
 bindkey -M filterselect '^[F' forward-word # Escape + F
 bindkey -M filterselect '^[B' backward-word # Escape + B

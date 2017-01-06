@@ -29,7 +29,7 @@ The example .zshrc file includes several great plugins by default:
 - zsh-syntax-highlighting
   - syntax highlighting on the command line
 
-## Installation
+## Installation & Usage
 
 Set Zsh as your default shell, if necessary: `chsh -s /bin/zsh`
 
@@ -45,8 +45,6 @@ or
 1.  Copy the contents of `.zshrc.zgen` and `.zgen-setup.zsh` from this repo to `~/.zshrc` and `~/.zgen-setup.zsh`
 
 That's it!
-
-## Usage
 
 ### install.rb
 
@@ -67,6 +65,90 @@ can regenerate the static configuration file for your plugins.
 Zgen will clone the plugin repos to a local directory.  To pull upstream changes,
 run `zgen update`.  Zgen will pull the latest changes in all repos
 and then regenerate the init file the next time a shell is opened.
+
+## Commands
+
+`zgen reset` - reset your zgen config.  needed if you change ~/.zgen-setup.zsh
+
+`zgen update` - tell zgen to update all of the plugins
+
+## Shortcuts
+
+**Important:** for your meta key (alt/option) to function properly, it must be
+set to 'Esc+' in the iTerm settings.
+
+You can set that by running this command **with iTerm closed**:
+`/usr/libexec/PlistBuddy -c 'Set :"New Bookmarks":0:"Option Key Sends" 2' ~/Library/Preferences/com.googlecode.iterm2.plist`
+
+### Filter search commands
+
+These commands will display a filterable list that you can choose from.
+
+When in the menu:
+
+Press `enter` to execute the **primary action**
+Press `meta + enter` to execute the **secondary action**
+Press `tab` to access the list of possible actions
+
+`Ctrl+R, Ctrl+R` - Search command history
+
+Primary action: execute command
+
+Secondary action: replace buffer with command
+
+`Meta+Shift+D` - Search recent directories
+
+Action: insert into buffer
+
+`Meta+Shift+F` - Search recent files
+
+Action: insert into buffer
+
+`Meta+Shift+B` - Search git branches
+
+Action: checkout branch
+
+`Meta+Shift+O` - Search files tracked by git.  Shows git status of files
+
+Primary action: Edit file
+
+Secondary action: Execute 'git add' on file
+
+`Meta+Shift+L` - Search git log
+
+Primary action: Insert SHA of selected commit
+
+Secondary action: Execute 'git reset'
+
+`Meta+Shift+R` - Search git reflog
+
+Primary action: Insert SHA of selected commit
+
+Secondary action: Execute 'git reset'
+
+`Meta+Shift+S` - Show git status
+
+Primary action: Execute 'git add' on selected file
+
+Secondary action: Execute 'git add -p' on selected file.  -p (patch) allows adding
+specific hunks to the commit
+
+`Meta+Shift+S` - Show Zaw menu
+
+The Zaw menu will give you access to all sources
+
+## Features
+
+### Zaw & Fasd
+
+Zaw provides a UI to incrementally search lists from multiple sources, similar to
+helm in emacs.
+
+Fasd keeps track of recently accessed directories and files, allowing you to access
+it with Zaw.
+
+'Filter search' commands are provided by Zaw
+
 
 ## Caveats
 
