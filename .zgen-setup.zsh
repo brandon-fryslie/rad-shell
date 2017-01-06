@@ -25,13 +25,16 @@ if ! zgen saved; then
   zgen load brandon-fryslie/rad-shell zgen-default-module-fix
 
   # Extra plugins
-  zgen load sorin-ionescu/prezto modules/git
   zgen load sorin-ionescu/prezto modules/fasd
+  zgen load sorin-ionescu/prezto modules/git
   zgen load sorin-ionescu/prezto modules/history-substring-search
+  zgen load sorin-ionescu/prezto modules/python
+  zgen load sorin-ionescu/prezto modules/tmux
 
   # 3rd Party plugins
   zgen load lukechilds/zsh-nvm
   zgen load robbyrussell/oh-my-zsh plugins/docker
+  zgen load robbyrussell/oh-my-zsh plugins/pip
   zgen load zsh-users/zaw
   zgen load zsh-users/zsh-autosuggestions
   zgen load zsh-users/zsh-completions
@@ -47,3 +50,9 @@ if ! zgen saved; then
 
   zgen save
 fi
+
+# Initialize the completion engine
+# This adds a significant amount of startup time (~0.5 seconds)
+# Disable this if you want to sacrifice completions for moar speed
+autoload -Uz compinit
+compinit
