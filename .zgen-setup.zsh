@@ -1,40 +1,35 @@
+# Copy this to ~/.zgen-setup.zsh and add 'source ~/.zgen-setup.zsh' to your .zshrc file
+# Modify freely to add new plugins
+
+# Initialize the completion engine
+# This adds a significant amount of startup time (~0.5 seconds)
+# Disable this if you want to sacrifice completions for moar speed
+ZGEN_AUTOLOAD_COMPINIT=1
+
+# Automatically regenerate zgen configuration when ~/.zgen-setup.zsh changes
+ZGEN_RESET_ON_CHANGE=~/.zgen-setup.zsh
+
 source "${HOME}/.zgen/zgen.zsh"
 # if the init scipt doesn't exist
 if ! zgen saved; then
-  # Disable loading default Prezto modules
-  # This is necessary due to a quirk of zgen that will load these plugins after
-  # our custom plugins, overwriting our customizations
-  # https://github.com/tarjoilija/zgen/issues/74
-  export ZGEN_PREZTO_LOAD_DEFAULT=0
 
+  # Loads prezto base and default plugins:
+  # environment terminal editor history directory spectrum utility completion prompt
   zgen prezto
 
-  # Default plugins
-  zgen load sorin-ionescu/prezto modules/environment
-  zgen load sorin-ionescu/prezto modules/terminal
-  zgen load sorin-ionescu/prezto modules/editor
-  zgen load sorin-ionescu/prezto modules/history
-  zgen load sorin-ionescu/prezto modules/directory
-  zgen load sorin-ionescu/prezto modules/spectrum
-  zgen load sorin-ionescu/prezto modules/utility
-  zgen load sorin-ionescu/prezto modules/completion
-  zgen load sorin-ionescu/prezto modules/prompt
-
-  # Tell prezto we have loaded the default plugins
-  # This needs to be right after the default plugins are loaded
-  zgen load brandon-fryslie/rad-shell zgen-default-module-fix
-
-  # Extra plugins
-  zgen load sorin-ionescu/prezto modules/fasd
-  zgen load sorin-ionescu/prezto modules/git
-  zgen load sorin-ionescu/prezto modules/history-substring-search
-  zgen load sorin-ionescu/prezto modules/python
-  zgen load sorin-ionescu/prezto modules/tmux
+  # Extra prezto plugins
+  zgen prezto fasd
+  zgen prezto git
+  zgen prezto history-substring-search
+  zgen prezto python
+  zgen prezto ruby
+  zgen prezto tmux
 
   # 3rd Party plugins
   zgen load lukechilds/zsh-nvm
   zgen load robbyrussell/oh-my-zsh plugins/docker
   zgen load robbyrussell/oh-my-zsh plugins/pip
+
   zgen load zsh-users/zaw
   zgen load zsh-users/zsh-autosuggestions
   zgen load zsh-users/zsh-completions
@@ -50,9 +45,3 @@ if ! zgen saved; then
 
   zgen save
 fi
-
-# Initialize the completion engine
-# This adds a significant amount of startup time (~0.5 seconds)
-# Disable this if you want to sacrifice completions for moar speed
-autoload -Uz compinit
-compinit

@@ -83,7 +83,7 @@ if $options[:mode] == 'install'
 
   if !File.exist?("#{$options[:zgen_dir]}")
     puts "Cloning Zgen into #{$options[:zgen_dir]}...".yellow
-    puts `git clone https://github.com/tarjoilija/zgen.git "#{$options[:zgen_dir]}"`
+    puts `git clone https://github.com/brandon-fryslie/zgen "#{$options[:zgen_dir]}"`
   else
     puts "#{$options[:zgen_dir]} exists, skipping clone...".yellow
   end

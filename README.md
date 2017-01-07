@@ -9,6 +9,14 @@ Compatible with Prezto plugins, and many Oh-My-Zsh plugins out of the box.
 Note: the install script will only work on macOS due to the use of `homebrew`.  
 Some of the key bindings may also need to be adjusted for other OS's.
 
+**Important:**  For the time being, you must use my fork of the project which
+has an important bugfix with regards to module loading order.  You might see
+errors about functions not being defined if using the official Zgen repo.
+
+There is a PR open with the fix that I hope will be merged: https://github.com/tarjoilija/zgen/pull/87
+
+My fork is located here: https://github.com/brandon-fryslie/zgen
+
 ## Features
 
 The example .zshrc file includes several great plugins by default:
@@ -40,9 +48,10 @@ Set Zsh as your default shell, if necessary: `chsh -s /bin/zsh`
 
 or
 
-1.  Install Zgen: `git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"`
+1.  Install (forked) Zgen: `git clone https://github.com/brandon-fryslie/zgen "${HOME}/.zgen"`
 1.  Install Fasd if desired (substitute your own package manager if not on macOS): `brew install fasd`
 1.  Copy the contents of `.zshrc.zgen` and `.zgen-setup.zsh` from this repo to `~/.zshrc` and `~/.zgen-setup.zsh`
+1.  Copy your own customizations into ~/.zshrc if desired
 
 That's it!
 
