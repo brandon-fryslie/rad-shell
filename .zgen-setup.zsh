@@ -26,7 +26,6 @@ if ! zgen saved; then
   zgen prezto tmux
 
   # 3rd Party plugins
-  zgen load lukechilds/zsh-nvm
   zgen load robbyrussell/oh-my-zsh plugins/docker
   zgen load robbyrussell/oh-my-zsh plugins/pip
 
@@ -36,12 +35,13 @@ if ! zgen saved; then
   zgen load zsh-users/zsh-syntax-highlighting
 
   zgen load brandon-fryslie/rad-shell git
+  zgen load brandon-fryslie/rad-shell nvm-lazy-load
   zgen load brandon-fryslie/rad-shell shell-customize
   zgen load brandon-fryslie/rad-shell shell-tools
   zgen load brandon-fryslie/rad-shell zaw
 
   # Theme
-  zgen load brandon-fryslie/git-taculous-zsh-theme git-taculous
+  zgen load brandon-fryslie/rad-shell git-taculous-theme/git-taculous
 
   zgen save
 fi
