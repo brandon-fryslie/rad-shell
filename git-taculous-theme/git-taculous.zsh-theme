@@ -84,12 +84,10 @@ function setprompt() {
         infoline+=( "$(_get-docker-prompt)" )
     fi
 
-    if [[ $ENABLE_NODE_PROMPT == 'true' ]]; then
-        infoline+=( "$(_get-node-prompt)" )
-    fi
-
-    if [[ $AUTO_NODE_PROMPT == 'true' ]] && zstyle -t ':nvm-lazy-load' nvm-loaded 'yes'; then
-        infoline+=( "$(_get-node-prompt)" )
+    if [[ $ENABLE_NODE_PROMPT == 'true' ]] \
+        || [[ $LAZY_NODE_PROMPT == 'true' ]] \
+        && zstyle -t ':nvm-lazy-load' nvm-loaded 'yes'; then
+            infoline+=( "$(_get-node-prompt)" )
     fi
 
     # Username & host

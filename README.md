@@ -63,6 +63,22 @@ You can use `install.rb` to install Zgen and the default .zshrc and .zgen-setup.
 You can run `install.rb --clean` to remove back up your existing .zshrc and .zgen-setup.zsh
 files, remove Zgen, and uninstall `fasd`
 
+### Theme
+
+You can configure the theme with several environment variables:
+
+`ENABLE_DOCKER_PROMPT=true`
+- set this to show your DOCKER_HOST in the prompt
+
+`LAZY_NODE_PROMPT=true`
+- show nodejs and npm versions in your prompt
+- will only show versions once NVM has been sourced
+- you must use the nvm-lazy-load plugin in this repo for this to work
+
+`ENABLE_NODE_PROMPT=true`
+- show nodejs and npm versions in your prompt
+- this will load NVM right away, adding significant time to your shell's startup time
+
 ### Zgen
 
 You can add new plugins to the `.zgen-setup.zsh` file.  Check out the plugins
