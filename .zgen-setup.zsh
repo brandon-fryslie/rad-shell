@@ -55,7 +55,5 @@ if ! zgen saved; then
   # Theme
   zgen load brandon-fryslie/rad-shell git-taculous-theme/git-taculous
 
-
-
   zgen save
 fi
