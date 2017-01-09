@@ -4,6 +4,9 @@
 # replaces them when the stub is called
 #
 # Some smarts are in place to source the nvm script a minimum number of times
+#
+# Credit goes to user 'sscotth' on reddit
+# https://www.reddit.com/r/node/comments/4tg5jg/lazy_load_nvm_for_faster_shell_start/d5ib9fs/
 
 declare -a NODE_GLOBALS
 NODE_GLOBALS=(`find ~/.nvm/versions/node -maxdepth 3 -type l -wholename '*/bin/*' | xargs -n1 basename | sort | uniq`)
@@ -18,16 +21,16 @@ load_nvm () {
 }
 
 setup_node_aliases() {
+    local script
     for cmd in "${NODE_GLOBALS[@]}"; do
         script=$(cat <<-EOSCRIPT
-    ${cmd}() {
-        unset -f ${NODE_GLOBALS}
-        zstyle -t ':nvm-lazy-load' nvm-loaded 'yes' || load_nvm
-        ${cmd} \$@
-    }
+            ${cmd}() {
+                unset -f ${NODE_GLOBALS}
+                zstyle -t ':nvm-lazy-load' nvm-loaded 'yes' || load_nvm
+                ${cmd} \$@
+            }
 EOSCRIPT
     )
-
         eval "$script"
     done
 }
