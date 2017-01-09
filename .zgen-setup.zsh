@@ -2,8 +2,6 @@
 # Modify freely to add new plugins
 
 # Initialize the completion engine
-# This adds a significant amount of startup time (~0.5 seconds)
-# Disable this if you want to sacrifice completions for moar speed
 ZGEN_AUTOLOAD_COMPINIT=1
 
 # Automatically regenerate zgen configuration when ~/.zgen-setup.zsh changes

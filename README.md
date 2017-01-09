@@ -22,7 +22,7 @@ My fork is located here: https://github.com/brandon-fryslie/zgen
 The example .zshrc file includes several great plugins by default:
 
 - fasd
-  - keep track of useful
+  - keep track of recent files / directories
   - requires install: `brew install fasd`
 - git-taculous theme
   - displays git, node, and docker information in your prompt
@@ -50,6 +50,7 @@ or
 
 1.  Install (forked) Zgen: `git clone https://github.com/brandon-fryslie/zgen "${HOME}/.zgen"`
 1.  Install Fasd if desired (substitute your own package manager if not on macOS): `brew install fasd`
+  - Fasd keeps track of recently used files and directories.  Related Functionality won't work without Fasd
 1.  Copy the contents of `.zshrc.zgen` and `.zgen-setup.zsh` from this repo to `~/.zshrc` and `~/.zgen-setup.zsh`
 1.  Copy your own customizations into ~/.zshrc if desired
 
@@ -77,8 +78,6 @@ and then regenerate the init file the next time a shell is opened.
 
 ## Commands
 
-`zgen reset` - reset your zgen config.  needed if you change ~/.zgen-setup.zsh
-
 `zgen update` - tell zgen to update all of the plugins
 
 ## Shortcuts
@@ -86,7 +85,7 @@ and then regenerate the init file the next time a shell is opened.
 **Important:** for your meta key (alt/option) to function properly, it must be
 set to 'Esc+' in the iTerm settings.
 
-You can set that by running this command **with iTerm closed**:
+You can set that by running this command **with iTerm closed** (use Terminal):
 `/usr/libexec/PlistBuddy -c 'Set :"New Bookmarks":0:"Option Key Sends" 2' ~/Library/Preferences/com.googlecode.iterm2.plist`
 
 ### Filter search commands
@@ -151,7 +150,7 @@ The Zaw menu will give you access to all sources
 ### Zaw & Fasd
 
 Zaw provides a UI to incrementally search lists from multiple sources, similar to
-helm in emacs.
+Helm in emacs.
 
 Fasd keeps track of recently accessed directories and files, allowing you to access
 it with Zaw.
