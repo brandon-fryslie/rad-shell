@@ -1,5 +1,3 @@
-# Rad Shell
-
 ![rad-shell logo](./resources/rad-shell-logo.png)
 
 A fantastically feature rich, lightening-fast shell, using
