@@ -4,47 +4,40 @@ A fantastically feature rich, lightening-fast shell, using
 [Zsh](http://www.zsh.org/), [Prezto](https://github.com/sorin-ionescu/prezto),
 and [Zgen](https://github.com/tarjoilija/zgen).
 
-Compatible with Prezto plugins, and many Oh-My-Zsh plugins out of the box.
-
-Note: the install script will only work on macOS due to the use of `homebrew`.  
-Some of the key bindings may also need to be adjusted for other OS's.
-
-**Important:**  For the time being, you must use my fork of the project which
-has an important bugfix with regards to module loading order.  You might see
-errors about functions not being defined if using the official Zgen repo.
-
-There is a PR open with the fix that I hope will be merged: https://github.com/tarjoilija/zgen/pull/87
-
-My fork is located here: https://github.com/brandon-fryslie/zgen
-
-## Features
-
-The example .zshrc file includes several great plugins by default:
-
-- fasd
-  - keep track of recent files / directories
-  - requires install: `brew install fasd`
-- git-taculous theme
-  - displays git, node, and docker information in your prompt
-- zaw
-  - emacs-style incrementally filterable lists
-- zsh-autosuggestions
-  - show autosuggestions based on command history
-- zsh-completions
-  - more useful completions
-- zsh-nvm
-  - automatically install NVM and switch to the correct node version
-- zsh-syntax-highlighting
-  - syntax highlighting on the command line
+Compatible with Oh-My-Zsh and Prezto plugins out of the box.
 
 ## Installation & Usage
 
 Set Zsh as your default shell, if necessary: `chsh -s /bin/zsh`
 
+With Curl:
 
-2 choices:
+```sh
+curl -o- https://raw.githubusercontent.com/brandon-fryslie/rad-shell/master/install.sh | bash
+```
 
-1.  Clone this repo, then run `install.rb`
+or Wget:
+
+```sh
+wget -qO- https://raw.githubusercontent.com/brandon-fryslie/rad-shell/master/install.sh | bash
+```
+
+This script:
+- Backs up ~/.zshrc to ~/.zshrc.bak, if ~/.zshrc exists
+  - Will exit if both ~/.zshrc and ~/.zshrc.bak exist
+- Writes a new ~/.zshrc file
+- Writes a ~/.zgen-setup.zsh file that contains Zsh plugin configuration
+- Clones the (forked) Zgen repo
+- Installs Fasd
+
+<sub>Note: the install script will only work on macOS due to the use of `homebrew`.
+Some of the key bindings may also need to be adjusted for other OS's.</sub>
+
+### Other installation options
+
+There are two other choices:
+
+1.  Clone this repo, then run `install.rb.`  You can also run `install.rb --clean` to remove everything.
 
 or
 
@@ -54,14 +47,7 @@ or
 1.  Copy the contents of `.zshrc.zgen` and `.zgen-setup.zsh` from this repo to `~/.zshrc` and `~/.zgen-setup.zsh`
 1.  Copy your own customizations into ~/.zshrc if desired
 
-That's it!
-
-### install.rb
-
-You can use `install.rb` to install Zgen and the default .zshrc and .zgen-setup.zsh files
-
-You can run `install.rb --clean` to remove back up your existing .zshrc and .zgen-setup.zsh
-files, remove Zgen, and uninstall `fasd`
+## Usage
 
 ### Theme
 
@@ -92,11 +78,11 @@ Zgen will clone the plugin repos to a local directory.  To pull upstream changes
 run `zgen update`.  Zgen will pull the latest changes in all repos
 and then regenerate the init file the next time a shell is opened.
 
-## Commands
+### Commands
 
 `zgen update` - tell zgen to update all of the plugins
 
-## Shortcuts
+### Shortcuts
 
 **Important:** for your meta key (alt/option) to function properly, it must be
 set to 'Esc+' in the iTerm settings.
@@ -104,7 +90,7 @@ set to 'Esc+' in the iTerm settings.
 You can set that by running this command **with iTerm closed** (use Terminal):
 `/usr/libexec/PlistBuddy -c 'Set :"New Bookmarks":0:"Option Key Sends" 2' ~/Library/Preferences/com.googlecode.iterm2.plist`
 
-### Filter search commands
+#### Filter search commands
 
 These commands will display a filterable list that you can choose from.
 
@@ -161,7 +147,25 @@ specific hunks to the commit
 
 The Zaw menu will give you access to all sources
 
-## Features
+## Plugins
+
+The example .zshrc file includes several great plugins by default:
+
+- fasd
+  - keep track of recent files / directories
+  - requires install: `brew install fasd`
+- git-taculous theme
+  - displays git, node, and docker information in your prompt
+- zaw
+  - emacs-style incrementally filterable lists
+- zsh-autosuggestions
+  - show autosuggestions based on command history
+- zsh-completions
+  - more useful completions
+- zsh-nvm
+  - automatically install NVM and switch to the correct node version
+- zsh-syntax-highlighting
+  - syntax highlighting on the command line
 
 ### Zaw & Fasd
 
@@ -173,9 +177,14 @@ it with Zaw.
 
 'Filter search' commands are provided by Zaw
 
-
 ## Caveats
 
 Directly sourcing your .zshrc file will cause the current shell to exit, for
 some unknown reason.  Pull requests for a fix are welcome.  As a workaround,
 open a new shell rather than using `source ~/.zshrc`.
+
+**Important:**  For the time being, you must use my fork of the project which
+has an important bugfix with regards to module loading order.  You might see
+errors about functions not being defined if using the official Zgen repo.
+
+There is a PR open with the fix that I hope will be merged: https://github.com/tarjoilija/zgen/pull/87
