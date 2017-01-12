@@ -46,13 +46,13 @@ dhost() {
 
 # Completions for Dhost command
 _dhost_completion() {
-  local hist_list host pattern=${DHOST_PATTERN}
+  local hist_list host include_pattern=${DHOST_INCLUDE_PATTERN}
 
   # Complete from SSH Hosts
   _dhost_ssh_host_list=$(echo ${${${${${(f)"$(cat {/etc/ssh_,~/.ssh/known_}hosts(|2)(N) 2>/dev/null)"}%%[#| ]*}//\]:[0-9]*/ }//,/ }//\[/ } | tr ' ' '\n' | sort | uniq)
 
-  if [[ ! -z $pattern ]]; then
-    _dhost_ssh_host_list=$(echo $_dhost_ssh_host_list | grep $pattern)
+  if [[ ! -z $include_pattern ]]; then
+    _dhost_ssh_host_list=$(echo $_dhost_ssh_host_list | grep $include_pattern)
   fi
 
   # Complete from history
