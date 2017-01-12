@@ -31,21 +31,29 @@ if ! zgen saved; then
   zgen prezto fasd
   zgen prezto git
   zgen prezto history-substring-search
-  zgen prezto python
-  zgen prezto ruby
-  zgen prezto tmux
 
-  # 3rd Party plugins
-  zgen load robbyrussell/oh-my-zsh plugins/docker
-  zgen load robbyrussell/oh-my-zsh plugins/pip
+  # Uncomment to enable Python support
+  # zgen prezto python
+  # zgen load robbyrussell/oh-my-zsh plugins/pip
+
+  # Uncomment to enable Ruby support
+  # zgen prezto ruby
+
+  # Uncomment to enable Tmux support
+  # zgen prezto tmux
+
+  # Uncomment to enable Docker support
+  # zgen load robbyrussell/oh-my-zsh plugins/docker
+  # zgen load brandon-fryslie/rad-shell docker
+
+  # Uncomment to enable NVM support
+  # zgen load brandon-fryslie/rad-shell nvm-lazy-load
 
   zgen load zsh-users/zaw
   zgen load zsh-users/zsh-autosuggestions
   zgen load zsh-users/zsh-completions
 
-  zgen load brandon-fryslie/rad-shell docker
   zgen load brandon-fryslie/rad-shell git
-  zgen load brandon-fryslie/rad-shell nvm-lazy-load
   zgen load brandon-fryslie/rad-shell shell-tools
   zgen load brandon-fryslie/rad-shell zaw
 
