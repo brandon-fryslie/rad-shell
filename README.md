@@ -1,6 +1,6 @@
 ![rad-shell logo](./resources/rad-shell-logo.png)
 
-A fantastically feature rich, lightening-fast shell, using
+A fantastically feature rich, lightning-fast shell, using
 [Zsh](http://www.zsh.org/), [Prezto](https://github.com/sorin-ionescu/prezto),
 and [Zgen](https://github.com/tarjoilija/zgen).
 
