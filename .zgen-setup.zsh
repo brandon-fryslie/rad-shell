@@ -43,6 +43,7 @@ if ! zgen saved; then
   zgen load zsh-users/zsh-autosuggestions
   zgen load zsh-users/zsh-completions
 
+  zgen load brandon-fryslie/rad-shell docker
   zgen load brandon-fryslie/rad-shell git
   zgen load brandon-fryslie/rad-shell nvm-lazy-load
   zgen load brandon-fryslie/rad-shell shell-tools
