@@ -1,9 +1,3 @@
-# Colors
-zstyle ':prezto:*:*' color 'yes'
-zstyle ':completion:*:default' list-colors ''
-export CLICOLOR=1
-export LSCOLORS=gxfxcxdxbxegedabagacad
-
 # Configure the syntax highlighter a little
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
 ZSH_HIGHLIGHT_STYLES[globbing]='fg=blue,bold'
@@ -11,15 +5,33 @@ ZSH_HIGHLIGHT_STYLES[history-expansion]='fg=blue,bold'
 ZSH_HIGHLIGHT_STYLES[bracket-error]='fg=red,bold,underline'
 ZSH_HIGHLIGHT_PATTERNS+=('$[a-zA-Z0-9_]#' 'fg=cyan,underline') # Shell variables
 
-# Share history between terminal windows
-setopt INC_APPEND_HISTORY
-setopt SHARE_HISTORY
-setopt HIST_IGNORE_ALL_DUPS
-setopt EXTENDED_HISTORY
-setopt HIST_REDUCE_BLANKS
-HISTFILE=~/.zsh_history
-HISTSIZE=99999999
-SAVEHIST=$HISTSIZE
+## Command history configuration
+## Copied & modified from oh-my-zsh history plugin
+if [ -z "$HISTFILE" ]; then
+    HISTFILE=$HOME/.zsh_history
+fi
+
+HISTSIZE=100000
+SAVEHIST=100000
+
+# Show history
+case $HIST_STAMPS in
+  "mm/dd/yyyy") alias history='fc -fl 1' ;;
+  "dd.mm.yyyy") alias history='fc -El 1' ;;
+  "yyyy-mm-dd") alias history='fc -il 1' ;;
+  *) alias history='fc -l 1' ;;
+esac
+
+setopt append_history
+setopt extended_history
+setopt hist_expire_dups_first
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
+setopt hist_reduce_blanks
+setopt hist_verify
+setopt inc_append_history
+setopt share_history
+## / Command history configuration
 
 # Just so we have something
 export EDITOR=vi
