@@ -15,7 +15,9 @@ Call `dhost host_string port_number` to set the DOCKER_HOST and the port
 
 #### Additional features
 
-You can specify some variables to control its behavior:
+You can specify some variables to control its behavior.
+
+**Important:** You must declare these variables **after** this plugin is sourced.
 
 `DHOST_PATTERN`
 - this will filter output from your ssh hosts.  I set mine to `"docker\|swarm" `
