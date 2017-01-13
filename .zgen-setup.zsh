@@ -58,7 +58,7 @@ if ! zgen saved; then
   zgen load brandon-fryslie/rad-shell zaw
 
   # Load these plugins last
-  zgen load zsh-users/zsh-syntax-highlighting
+  zgen load brandon-fryslie/zsh-syntax-highlighting
   zgen load brandon-fryslie/rad-shell shell-customize
 
   # Theme

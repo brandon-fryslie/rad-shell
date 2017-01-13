@@ -179,10 +179,6 @@ it with Zaw.
 
 ## Caveats
 
-Directly sourcing your .zshrc file will cause the current shell to exit, for
-some unknown reason.  Pull requests for a fix are welcome.  As a workaround,
-open a new shell rather than using `source ~/.zshrc`.
-
 **Important:**  For the time being, you must use my fork of the project which
 has an important bugfix with regards to module loading order.  You might see
 errors about functions not being defined if using the official Zgen repo.
