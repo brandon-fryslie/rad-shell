@@ -19,7 +19,7 @@ dhost() {
   local port=${2:-2375}
 
   # Check to see if host_string is in host map
-  if [[ ! -z $DHOST_HOST_MAP[$host_string] ]]; then
+  if [[ $host_string =~ '^[a-zA-Z0-9]+$' ]] && [[ ! -z $DHOST_HOST_MAP[$host_string] ]]; then
     host_string=$DHOST_HOST_MAP[$host_string]
   fi
 
@@ -60,7 +60,7 @@ _dhost_completion() {
   hist_list=$(history 1 | grep "DOCKER_HOST=tcp")
 
   while read -r hist_line; do
-    if [[ $hist_line =~ 'DOCKER_HOST=tcp://([a-zA-Z]([a-zA-Z0-9]|\-|\.)+)' ]]; then
+    if [[ $hist_line =~ 'DOCKER_HOST=tcp://([a-zA-Z0-9]([a-zA-Z0-9]|\-|\.)+)' ]]; then
       _dhost_hist_completions+=$match[1]
     fi
   done <<< "$hist_list"
