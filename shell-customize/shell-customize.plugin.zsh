@@ -1,3 +1,10 @@
+# Colors
+export CLICOLOR=1
+export LSCOLORS=gxfxcxdxbxegedabagacad
+
+zstyle ':prezto:*:*' color 'yes'
+zstyle ':completion:*:default' list-colors ''
+
 # Configure the syntax highlighter a little
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
 ZSH_HIGHLIGHT_STYLES[globbing]='fg=blue,bold'
