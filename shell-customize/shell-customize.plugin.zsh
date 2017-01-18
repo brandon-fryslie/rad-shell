@@ -7,9 +7,7 @@ ZSH_HIGHLIGHT_PATTERNS+=('$[a-zA-Z0-9_]#' 'fg=cyan,underline') # Shell variables
 
 ## Command history configuration
 ## Copied & modified from oh-my-zsh history plugin
-if [ -z "$HISTFILE" ]; then
-    HISTFILE=$HOME/.zsh_history
-fi
+HISTFILE=$HOME/.zsh_history
 
 HISTSIZE=100000
 SAVEHIST=100000
@@ -32,6 +30,9 @@ setopt hist_verify
 setopt inc_append_history
 setopt share_history
 ## / Command history configuration
+
+# Setup path for homebrew
+type brew &>/dev/null && export PATH="/usr/local/sbin:$PATH"
 
 # Just so we have something
 export EDITOR=vi
