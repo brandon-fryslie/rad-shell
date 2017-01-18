@@ -38,7 +38,9 @@ curl -o- $zgen_setup_url > ~/.zgen-setup.zsh \
 yellow "Cloing Zgen into $HOME/.zgen"
 git clone https://github.com/brandon-fryslie/zgen.git $HOME/.zgen
 
-yellow "Installing Fasd"
-brew install fasd
+if [[ $(uname) == Darwin ]]; then
+  yellow "Installing Fasd"
+  brew install fasd
+fi
 
 green "Done!  Open a new shell."
