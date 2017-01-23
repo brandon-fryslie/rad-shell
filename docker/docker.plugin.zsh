@@ -7,6 +7,13 @@ alias drm="docker rm"
 alias drmi="docker rmi"
 alias dc="docker-compose"
 
+typeset -Ax DHOST_ALIAS_MAP
+DHOST_ALIAS_MAP=()
+
+dhost-alias() {
+  DHOST_ALIAS_MAP[$1]=$2
+}
+
 # Dhost is a utility for setting your docker host
 dhost() {
   if [ -z "$1" ]; then
@@ -25,8 +32,8 @@ dhost() {
   fi
 
   # Check host aliases
-  if [[ $host_string =~ '^[a-zA-Z0-9]+$' ]] && [[ ! -z $DHOST_HOST_MAP[$host_string] ]]; then
-    host_string=$DHOST_HOST_MAP[$host_string]
+  if [[ $host_string =~ '^[a-zA-Z0-9]+$' ]] && [[ ! -z $DHOST_ALIAS_MAP[$host_string] ]]; then
+    host_string=$DHOST_ALIAS_MAP[$host_string]
   fi
 
   # Use custom resolver if specified
@@ -72,8 +79,8 @@ _dhost_completion() {
 
   # Complete from custom host map
   _dhost_host_map_completions=()
-  if [[ ! -z $DHOST_HOST_MAP ]]; then
-    for host in "${(@kv)DHOST_HOST_MAP}"; do
+  if [[ ! -z $DHOST_ALIAS_MAP ]]; then
+    for host in "${(@kv)DHOST_ALIAS_MAP}"; do
       _dhost_host_map_completions+=$host
     done
   fi
