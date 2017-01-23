@@ -18,12 +18,18 @@ dhost() {
   local host_string=$1
   local port=${2:-2375}
 
-  # Check to see if host_string is in host map
+  if [[ $host_string == local ]] || [[ $host_string == unset ]]; then
+    unset DOCKER_HOST
+    echo "unsetting DOCKER_HOST"
+    return 0
+  fi
+
+  # Check host aliases
   if [[ $host_string =~ '^[a-zA-Z0-9]+$' ]] && [[ ! -z $DHOST_HOST_MAP[$host_string] ]]; then
     host_string=$DHOST_HOST_MAP[$host_string]
   fi
 
-  # Check to see if there is a custom resolver
+  # Use custom resolver if specified
   if type dhost_custom_resolver &>/dev/null; then
     res=$(dhost_custom_resolver $host_string)
     [[ ! -z $res ]] && host_string=$res
@@ -40,7 +46,6 @@ dhost() {
   print -s "export DOCKER_HOST=$dhost"
 
   export DOCKER_HOST=$dhost
-
   echo "DOCKER_HOST=$dhost"
 }
 
