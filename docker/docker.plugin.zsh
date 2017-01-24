@@ -15,8 +15,6 @@ dlogs() {
   if [[ -z $1 ]]; then
     echo "Showing logs of first container..."
     local container_info="$(docker ps -a --format '{{.ID}} {{.Image}} {{.Names}}' | head -n 1)"
-    echo "got container info"
-    echo $container_info
   else
     local search_string=$1
     local container_info="$(docker ps -a --format '{{.ID}} {{.Image}} {{.Names}}' | grep $search_string | head -n 1)"
