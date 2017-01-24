@@ -7,6 +7,47 @@ alias drm="docker rm"
 alias drmi="docker rmi"
 alias dc="docker-compose"
 
+# Docker Helper commands.  Mostly useful for local development
+
+# Show docker logs for a container matching a search string, or the most recently run
+# container if no search string is provided
+dlogs() {
+  if [[ -z $1 ]]; then
+    echo "Showing logs of first container..."
+    local container_info="$(docker ps -a --format '{{.ID}} {{.Image}} {{.Names}}' | head -n 1)"
+    echo "got container info"
+    echo $container_info
+  else
+    local search_string=$1
+    local container_info="$(docker ps -a --format '{{.ID}} {{.Image}} {{.Names}}' | grep $search_string | head -n 1)"
+  fi
+  container_image=$(echo $container_info | awk '{print $2}')
+  container_name=$(echo $container_info | awk '{print $3}')
+  echo "Showing logs of container $container_name running image $container_image..."
+  docker logs -f $container_name
+}
+
+# Print SHAs of all docker containers
+dall() {
+  docker ps -aq
+}
+
+# Print SHA of most recently run docker container, or docker container matching
+# search string
+dfirst() {
+  if [[ -z $1 ]]; then
+    echo $(docker ps -aq | head -n 1) || echo 'NO_CONTAINER_FOUND'
+  else
+    echo $(docker ps --format '{{.ID}} {{.Image}} {{.Names}}' -a | grep $1 | head -n 1 | awk '{print $1}') || echo 'NO_CONTAINER_FOUND'
+  fi
+}
+
+dkill() {
+  docker rm -fv `dfirst $1`
+}
+
+# Dhost is a utility for setting your docker host
+
 typeset -Ax DHOST_ALIAS_MAP
 DHOST_ALIAS_MAP=()
 
@@ -14,7 +55,6 @@ dhost-alias() {
   DHOST_ALIAS_MAP[$1]=$2
 }
 
-# Dhost is a utility for setting your docker host
 dhost() {
   if [ -z "$1" ]; then
       echo $DOCKER_HOST
