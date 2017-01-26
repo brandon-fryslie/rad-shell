@@ -16,8 +16,8 @@ ZSH_HIGHLIGHT_PATTERNS+=('$[a-zA-Z0-9_]#' 'fg=cyan,underline') # Shell variables
 ## Copied & modified from oh-my-zsh history plugin
 HISTFILE=$HOME/.zsh_history
 
-HISTSIZE=100000
-SAVEHIST=100000
+HISTSIZE=10000
+SAVEHIST=10000
 
 # Show history
 case $HIST_STAMPS in
