@@ -44,6 +44,11 @@ dkill() {
   docker rm -fv `dfirst $1`
 }
 
+# Exec into the container matching 'search string'
+dexec() {
+  docker exec -ti `dfirst $1` ${2:-bash}
+}
+
 # Dhost is a utility for setting your docker host
 
 typeset -Ax DHOST_ALIAS_MAP
