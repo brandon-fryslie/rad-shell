@@ -92,11 +92,6 @@ dhost() {
     dhost="$dhost:$port"
   fi
 
-  # Manipulate history so our docker host shows up in completion later
-  # Maybe trying to be too clever?
-  print -s "export DOCKER_HOST=$dhost"
-  print -s "dhost $@"
-
   export DOCKER_HOST=$dhost
   echo "DOCKER_HOST=$dhost"
 }
