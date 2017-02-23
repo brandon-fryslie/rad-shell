@@ -12,13 +12,10 @@ alias dc="docker-compose"
 # Show docker logs for a container matching a search string, or the most recently run
 # container if no search string is provided
 dlogs() {
-  if [[ -z $1 ]]; then
-    echo "Showing logs of first container..."
-    local container_info="$(docker ps -a --format '{{.ID}} {{.Image}} {{.Names}}' | head -n 1)"
-  else
-    local search_string=$1
-    local container_info="$(docker ps -a --format '{{.ID}} {{.Image}} {{.Names}}' | grep $search_string | head -n 1)"
-  fi
+  local container_info=$(dfirst "$@")
+  container_info=$(echo $container_info | tr '\n' ' ')
+  [[ $container_info =~ "^[[:space:]]+$" ]] && { echo "Error: no container found"; return 1}
+
   container_image=$(echo $container_info | awk '{print $2}')
   container_name=$(echo $container_info | awk '{print $3}')
   echo "Showing logs of container $container_name running image $container_image..."
