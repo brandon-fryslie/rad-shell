@@ -31,22 +31,83 @@ dall() {
 }
 
 # Print SHA of most recently run docker container, or docker container matching
-# search string
+# all search strings
+# Example: dfirst nginx test user1
+#
+# Add '-a' to search exited containers as well
+# Example: dfirst -a my_exited_container other_search_string
+#
+# Add '-q' to only print the container ids
+
 dfirst() {
-  if [[ -z $1 ]]; then
-    echo $(docker ps -aq | head -n 1) || echo 'NO_CONTAINER_FOUND'
-  else
-    echo $(docker ps --format '{{.ID}} {{.Image}} {{.Names}}' -a | grep $1 | head -n 1 | awk '{print $1}') || echo 'NO_CONTAINER_FOUND'
+  # Parse options
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+
+    case $key in
+      -a) local ALL_IMAGES=-a; shift;;
+      -q) local QUIET=true; shift;;
+      -d) local DEBUG=true; shift;;
+      -*) echo "Unknown option: $1"; exit 1;;
+      *)
+        # Handle search strings here
+        if [[ -z $search_string ]]; then
+          local search_string="grep $1"; shift
+        else
+          search_string="$search_string | grep $1"; shift
+        fi
+      ;;
+    esac
+  done
+
+  # General command
+  local cmd="docker ps $ALL_IMAGES --format '{{.ID}} {{.Image}} {{.Names}}'"
+
+  # If we have a search string, append it
+  if [[ ! -z $search_string ]]; then
+    cmd="$cmd | $search_string"
   fi
+
+  # Only take one line of output
+  cmd="$cmd | head -n 1"
+
+  # If quiet mode is on, only print container IDs
+  [[ $QUIET == true ]] && cmd="$cmd | awk '{print \$1}'"
+
+  if [[ $DEBUG == true ]]; then
+    echo "DEBUG MODE ON"
+    echo "ALL_IMAGES: $ALL_IMAGES"
+    echo "QUIET: $QUIET"
+    echo "search string: $search_string"
+    echo "running command: $cmd"
+  fi
+
+  eval "$cmd"
 }
 
 dkill() {
-  docker rm -fv `dfirst $1`
+  docker rm -fv `dfirst -q "$@"`
 }
 
-# Exec into the container matching 'search string'
+# Exec into the container matching the search strings
+# By default, it execs 'bash'
+# Use the -c option to change this, e.g. 'dexec service_name -c env'
+# Usage: 'dexec search_string_1 search_string_2 search_string_3'
 dexec() {
-  docker exec -ti `dfirst $1` ${2:-bash}
+  # Parse options
+  local search_strings=()
+  local command="bash"
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+
+    case $key in
+      -c|--command) command="$2"; shift; shift;;
+      -*) echo "Unknown option: $1"; exit 1;;
+      *) search_strings+=("$1"); shift;;
+    esac
+  done
+
+  docker exec -ti `dfirst -q $search_strings` $command
 }
 
 # Dhost is a utility for setting your docker host
