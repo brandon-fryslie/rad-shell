@@ -54,8 +54,9 @@ dsearch() {
     case $key in
       -a) local ALL_IMAGES=-a; shift;;
       -q) local QUIET=true; shift;;
+      -aq|-qa) local QUIET=true; local ALL_IMAGES=-a; shift;;
       -d) local DEBUG=true; shift;;
-      -*) echo "Unknown option: $1"; exit 1;;
+      -*) echo "Unknown option: $1"; return 1;;
       *)
         # Handle search strings here
         if [[ -z $search_string ]]; then
@@ -106,7 +107,7 @@ dexec() {
 
     case $key in
       -c|--command) command="$2"; shift; shift;;
-      -*) echo "Unknown option: $1"; exit 1;;
+      -*) echo "Unknown option: $1"; return 1;;
       *) search_strings+=("$1"); shift;;
     esac
   done
