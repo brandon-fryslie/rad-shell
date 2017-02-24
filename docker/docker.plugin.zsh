@@ -27,16 +27,26 @@ dall() {
   docker ps -aq
 }
 
-# Print SHA of most recently run docker container, or docker container matching
-# all search strings
+# Print info of most recently run docker container matching all search strings
 # Example: dfirst nginx test user1
 #
 # Add '-a' to search exited containers as well
 # Example: dfirst -a my_exited_container other_search_string
 #
-# Add '-q' to only print the container ids
-
+# Add '-q' to only print the container id
 dfirst() {
+  dsearch "$@" | head -n 1
+}
+
+# Search running containers
+# Prints info for all containers matching the search string
+# Example: dsearch nginx test user1
+#
+# Add '-a' to search exited containers as well
+# Example: dsearch -a my_exited_container other_search_string
+#
+# Add '-q' to only print the container ids
+dsearch() {
   # Parse options
   while [[ $# -gt 0 ]]; do
     key="$1"
@@ -58,15 +68,12 @@ dfirst() {
   done
 
   # General command
-  local cmd="docker ps $ALL_IMAGES --format '{{.ID}} {{.Image}} {{.Names}}'"
+  local cmd="docker ps $ALL_IMAGES --format '{{.ID}} {{.Image}} {{.Names}} {{.Ports}}'"
 
   # If we have a search string, append it
   if [[ ! -z $search_string ]]; then
     cmd="$cmd | $search_string"
   fi
-
-  # Only take one line of output
-  cmd="$cmd | head -n 1"
 
   # If quiet mode is on, only print container IDs
   [[ $QUIET == true ]] && cmd="$cmd | awk '{print \$1}'"
