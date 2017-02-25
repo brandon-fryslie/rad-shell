@@ -1,3 +1,6 @@
+source "${0:a:h}/docker-zaw-container.zsh"
+source "${0:a:h}/docker-zaw-image.zsh"
+
 alias ds="docker status"
 alias di="docker images"
 alias db="docker build"
