@@ -7,24 +7,24 @@ function zaw-src-rad-docker-image() {
     : ${(A)candidates::=${(f)image_id}}
     : ${(A)cand_descriptions::=${(f)desc}}
     actions=(\
-        zaw-callback-append-to-buffer \
-        zaw-src-docker-image-history \
-        zaw-src-docker-image-rmi \
+        zaw-src-rad-docker-append-to-buffer \
+        zaw-src-rad-docker-image-history \
+        zaw-src-rad-docker-image-rmi \
     )
     act_descriptions=(\
         "append id to buffer" \
         "history" \
         "rmi" \
     )
-    options=(-t "$title")
+    options=(-t "$title" -m)
 }
 
-function zaw-src-docker-image-history() {
+function zaw-src-rad-docker-image-history() {
     BUFFER="docker history $1"
     zle accept-line
 }
 
-function zaw-src-docker-image-rmi() {
+function zaw-src-rad-docker-image-rmi() {
     BUFFER="docker rmi $1"
     zle accept-line
 }

@@ -1,3 +1,4 @@
+source "${0:a:h}/docker-zaw.zsh"
 source "${0:a:h}/docker-zaw-container.zsh"
 source "${0:a:h}/docker-zaw-image.zsh"
 

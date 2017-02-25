@@ -8,7 +8,7 @@ function zaw-src-rad-docker-container() {
     : ${(A)candidates::=${(f)container_id}}
     : ${(A)cand_descriptions::=${(f)desc}}
     actions=(\
-        zaw-callback-append-to-buffer \
+        zaw-src-rad-docker-append-to-buffer \
         zaw-src-docker-container-logs \
         zaw-src-docker-container-exec \
         zaw-src-docker-container-inspect \
@@ -21,7 +21,7 @@ function zaw-src-rad-docker-container() {
         "inspect" \
         "rm -fv" \
     )
-    options=(-t "$title")
+    options=(-t "$title" -m)
 }
 
 function zaw-src-docker-container-logs() {

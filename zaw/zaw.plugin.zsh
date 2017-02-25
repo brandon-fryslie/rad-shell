@@ -10,6 +10,7 @@ zstyle ':filter-select' rotate-list yes
 zstyle ':filter-select:highlight' selected fg=cyan,underline
 zstyle ':filter-select:highlight' matched fg=yellow
 zstyle ':filter-select:highlight' title fg=yellow,underline
+zstyle ':filter-select:highlight' marked bg=blue
 
 # Key bindings
 bindkey '^[Z' zaw
