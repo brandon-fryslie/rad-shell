@@ -49,9 +49,12 @@ if ! zgen saved; then
   zgen load zsh-users/zsh-autosuggestions
   zgen load zsh-users/zsh-completions
 
+  # This needs to be before any other zaw sources, e.g., git and docker
+  zgen load brandon-fryslie/rad-shell zaw
+
   zgen load brandon-fryslie/rad-shell git
   zgen load brandon-fryslie/rad-shell shell-tools
-  zgen load brandon-fryslie/rad-shell zaw
+
 
   # Load these plugins last
   zgen load brandon-fryslie/zsh-syntax-highlighting
