@@ -32,3 +32,16 @@ bindkey -M filterselect '^[B' backward-word # Escape + B
 
 bindkey -M filterselect '^[,' beginning-of-history # Escape + <
 bindkey -M filterselect '^[.' end-of-history # Escape + >
+
+# These are utility functions for use in zaw sources
+
+function zaw-rad-action() {
+    action=$1
+    [[ $action == "select-action" ]] && action='accept-search'
+    zle $action
+}
+
+function zaw-rad-append-to-buffer() {
+    BUFFER="$@"
+    zle accept-search
+}

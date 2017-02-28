@@ -7,26 +7,33 @@ function zaw-src-rad-docker-image() {
     : ${(A)candidates::=${(f)image_id}}
     : ${(A)cand_descriptions::=${(f)desc}}
     actions=(\
-        zaw-src-rad-docker-append-to-buffer \
+        zaw-src-rad-docker-image-inspect \
         zaw-src-rad-docker-image-history \
         zaw-src-rad-docker-image-rmi \
+        zaw-rad-append-to-buffer \
     )
     act_descriptions=(\
-        "append id to buffer" \
+        "inspect" \
         "history" \
         "rmi" \
+        "append id to buffer" \
     )
     options=(-t "$title" -m)
 }
 
+function zaw-src-rad-docker-image-inspect() {
+    BUFFER="docker inspect $1"
+    zaw-rad-action ${reply[1]}
+}
+
 function zaw-src-rad-docker-image-history() {
     BUFFER="docker history $1"
-    zle accept-line
+    zaw-rad-action ${reply[1]}
 }
 
 function zaw-src-rad-docker-image-rmi() {
     BUFFER="docker rmi $1"
-    zle accept-line
+    zaw-rad-action ${reply[1]}
 }
 
 zaw-register-src -n rad-docker-image zaw-src-rad-docker-image

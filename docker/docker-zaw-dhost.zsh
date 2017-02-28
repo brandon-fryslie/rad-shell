@@ -5,7 +5,7 @@ function zaw-src-rad-docker-dhost() {
     : ${(A)candidates::=$(echo "${(v)DHOST_ALIAS_MAP}" | tr ' ' "\n")}
     : ${(A)cand_descriptions::=$(echo "${(k)DHOST_ALIAS_MAP}" | tr ' ' "\n")}
     actions=(\
-        zaw-rad-append-to-buffer \
+        zaw-src-rad-docker-dhost-execute \
         zaw-rad-append-to-buffer \
     )
     act_descriptions=(\
@@ -17,12 +17,7 @@ function zaw-src-rad-docker-dhost() {
 
 function zaw-src-rad-docker-dhost-execute() {
     BUFFER="dhost $1"
-    zle accept-line
-}
-
-function zaw-src-rad-docker-image-rmi() {
-    BUFFER="docker rmi $1"
-    zle accept-line
+    zaw-rad-action ${reply[1]}
 }
 
 zaw-register-src -n rad-docker-dhost zaw-src-rad-docker-dhost

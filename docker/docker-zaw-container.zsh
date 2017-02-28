@@ -8,25 +8,25 @@ function zaw-src-rad-docker-container() {
     : ${(A)candidates::=${(f)container_id}}
     : ${(A)cand_descriptions::=${(f)desc}}
     actions=(\
-        zaw-src-rad-docker-append-to-buffer \
         zaw-src-docker-container-logs \
         zaw-src-docker-container-exec \
         zaw-src-docker-container-inspect \
         zaw-src-docker-container-rm \
+        zaw-rad-append-to-buffer \
     )
     act_descriptions=(\
-        "append name to buffer" \
         "logs" \
         "exec" \
         "inspect" \
         "rm -fv" \
+        "append name to buffer" \
     )
     options=(-t "$title" -m)
 }
 
 function zaw-src-docker-container-logs() {
     BUFFER="docker logs -f $1"
-    zle accept-line
+    zaw-rad-action ${reply[1]}
 }
 
 function zaw-src-docker-container-exec() {
@@ -49,12 +49,12 @@ function zaw-src-docker-container-inspect() {
     [[ (( $+commands[jq] )) ]] && jq="| jq"
 
     BUFFER="docker inspect $1 $jq"
-    zle accept-line
+    zaw-rad-action ${reply[1]}
 }
 
 function zaw-src-docker-container-rm() {
     BUFFER="docker rm -fv $1"
-    zle accept-line
+    zaw-rad-action ${reply[1]}
 }
 
 zaw-register-src -n rad-docker-container zaw-src-rad-docker-container
