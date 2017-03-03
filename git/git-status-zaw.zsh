@@ -1,3 +1,40 @@
+function zaw-rad-git-status-get-candidates() {
+    git rev-parse --git-dir >/dev/null 2>&1
+    [[ $? == 0 ]] || return $?
+    local file_list="$(git status --porcelain)"
+    local file_list_cands="$(echo $file_list | awk '{print $2}')"
+
+    : ${(A)filter_select_candidates::=${(f)${file_list_cands}}}
+
+    : ${(A)filter_select_descriptions::=${${(f)${file_list}}/ M /[modified]        }}
+    : ${(A)filter_select_descriptions::=${${(M)filter_select_descriptions}/AM /[add|modified]    }}
+    : ${(A)filter_select_descriptions::=${${(M)filter_select_descriptions}/MM /[staged|modified] }}
+    : ${(A)filter_select_descriptions::=${${(M)filter_select_descriptions}/M  /[staged]          }}
+    : ${(A)filter_select_descriptions::=${${(M)filter_select_descriptions}/A  /[staged(add)]     }}
+    : ${(A)filter_select_descriptions::=${${(M)filter_select_descriptions}/ D /[deleted]         }}
+    : ${(A)filter_select_descriptions::=${${(M)filter_select_descriptions}/UU /[conflict]        }}
+    : ${(A)filter_select_descriptions::=${${(M)filter_select_descriptions}/AA /[conflict]        }}
+    : ${(A)filter_select_descriptions::=${${(M)filter_select_descriptions}/\?\? /[untracked]       }}
+
+    # echo "rad-git-status getting candidates: ${(j:,:)filter_select_candidates}" >> /tmp/zaw.log
+}
+
+function zaw-rad-git-status() {
+    zaw-rad-git-status-get-candidates
+
+    while true; do
+        zaw-rad-git-status-get-candidates
+        filter-select -f zaw-rad-git-status-get-candidates -m -M radgit -d filter_select_descriptions -e select-action -t "select file" -- "${(@)filter_select_candidates}"
+
+        local action="${reply[1]}"
+
+        [[ $action == 'select-action' ]] && break
+    done
+
+    BUFFER="git status"
+    zaw-rad-action "${reply[1]}"
+}
+
 function rad-git-stage {
     git add "${FILTER_SELECT_SELECTED}" &>/dev/null
     # echo "staging file: ${FILTER_SELECT_SELECTED}" >> /tmp/zaw.log
@@ -25,45 +62,6 @@ function rad-git-unstage-all {
 }
 
 zle -N rad-git-unstage-all
-
-function zaw-src-rad-git-status-get-candidates() {
-    git rev-parse --git-dir >/dev/null 2>&1
-    [[ $? == 0 ]] || return $?
-    local file_list="$(git status --porcelain)"
-    local file_list_cands="$(echo $file_list | awk '{print $2}')"
-
-    : ${(A)filter_select_candidates::=${(f)${file_list_cands}}}
-
-    : ${(A)filter_select_descriptions::=${${(f)${file_list}}/ M /[modified]        }}
-    : ${(A)filter_select_descriptions::=${${(M)filter_select_descriptions}/AM /[add|modified]    }}
-    : ${(A)filter_select_descriptions::=${${(M)filter_select_descriptions}/MM /[staged|modified] }}
-    : ${(A)filter_select_descriptions::=${${(M)filter_select_descriptions}/M  /[staged]          }}
-    : ${(A)filter_select_descriptions::=${${(M)filter_select_descriptions}/A  /[staged(add)]     }}
-    : ${(A)filter_select_descriptions::=${${(M)filter_select_descriptions}/ D /[deleted]         }}
-    : ${(A)filter_select_descriptions::=${${(M)filter_select_descriptions}/UU /[conflict]        }}
-    : ${(A)filter_select_descriptions::=${${(M)filter_select_descriptions}/AA /[conflict]        }}
-    : ${(A)filter_select_descriptions::=${${(M)filter_select_descriptions}/\?\? /[untracked]       }}
-
-    # echo "rad-git-status getting candidates: ${(j:,:)filter_select_candidates}" >> /tmp/zaw.log
-}
-
-function zaw-src-rad-git-status() {
-    zaw-src-rad-git-status-get-candidates
-
-    while true; do
-        zaw-src-rad-git-status-get-candidates
-        filter-select -f zaw-src-rad-git-status-get-candidates -m -M radgit -d filter_select_descriptions -e select-action -t "select file" -- "${(@)filter_select_candidates}"
-
-        local action="${reply[1]}"
-
-        [[ $action == 'select-action' ]] && break
-    done
-
-    BUFFER="git status"
-    zaw-rad-action "${reply[1]}"
-}
-
-zaw-register-src -n rad-git zaw-src-rad-git
 
 function _rad-git-init-keymap() {
     integer fd ret

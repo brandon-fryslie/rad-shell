@@ -55,3 +55,5 @@ function zaw-rad-git-fetch() {
     BUFFER="git fetch"
     zaw-rad-action "${reply[1]}"
 }
+
+zaw-register-src -n rad-git zaw-src-rad-git
