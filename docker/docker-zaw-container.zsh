@@ -32,7 +32,7 @@ function zaw-src-docker-container-logs() {
 function zaw-src-docker-container-exec() {
     local exec_candidates=(bash env "ps ax")
     local reply=()
-    filter-select -e select-action -t "select command for exec" -- "${(@)exec_candidates}"
+    filter-select -k -e select-action -t "select command for exec" -- "${(@)exec_candidates}"
     [[ $? -eq 0 ]] || return $?
 
     action=${reply[1]}
@@ -48,13 +48,11 @@ function zaw-src-docker-container-inspect() {
     local jq=''
     [[ (( $+commands[jq] )) ]] && jq="| jq"
 
-    BUFFER="docker inspect $1 $jq"
-    zaw-rad-action ${reply[1]}
+    zaw-rad-buffer-action "docker inspect $1 $jq"
 }
 
 function zaw-src-docker-container-rm() {
-    BUFFER="docker rm -fv $1"
-    zaw-rad-action ${reply[1]}
+    zaw-rad-buffer-action "docker rm -fv $1"
 }
 
 zaw-register-src -n rad-docker-container zaw-src-rad-docker-container

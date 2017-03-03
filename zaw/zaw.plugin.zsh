@@ -45,3 +45,8 @@ function zaw-rad-append-to-buffer() {
     BUFFER="$@"
     zle accept-search
 }
+
+function zaw-rad-buffer-action() {
+    BUFFER="$1"
+    zaw-rad-action "${reply[1]}"
+}
