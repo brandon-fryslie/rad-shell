@@ -48,5 +48,7 @@ function zaw-rad-append-to-buffer() {
 
 function zaw-rad-buffer-action() {
     BUFFER="$1"
-    zaw-rad-action "${reply[1]}"
+
+    # Allow passing in an action to override the last selected action
+    zaw-rad-action ${2:-${reply[1]}}
 }
