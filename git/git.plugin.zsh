@@ -11,11 +11,13 @@ alias gst="git stash"
 alias lg="git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit"
 
 really-really-amend() {
-  local BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
-  if [ "$BRANCH_NAME" = "master" ]; then
+  local branch_name=$(git rev-parse --abbrev-ref HEAD)
+  local upstream_remote=${$(git rev-parse --verify "${branch_name}@{upstream}" --symbolic-full-name --abbrev-ref)%/*}
+
+  if [ "$branch_name" = "master" ]; then
     echo "Don't do this on master, dummy"
     return 1
   fi
 
-  git add . && git-amend && git push -f origin HEAD:$BRANCH_NAME
+  git add . && git-amend && git push -f $upstream_remote HEAD:$branch_name
 }
