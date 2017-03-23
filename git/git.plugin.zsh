@@ -12,7 +12,7 @@ alias lg="git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%
 
 really-really-amend() {
   local branch_name=$(git rev-parse --abbrev-ref HEAD)
-  local upstream_remote=${$(git rev-parse --verify "${branch_name}@{upstream}" --symbolic-full-name --abbrev-ref)%/*}
+  local upstream_remote=${$(git rev-parse --verify "${branch_name}@{upstream}" --symbolic-full-name --abbrev-ref 2>/dev/null)%/*}
 
   if [ "$branch_name" = "master" ]; then
     echo "Don't do this on master, dummy"
