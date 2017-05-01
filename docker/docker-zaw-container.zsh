@@ -10,6 +10,7 @@ function zaw-src-rad-docker-container() {
     actions=(\
         zaw-src-docker-container-logs \
         zaw-src-docker-container-exec \
+        zaw-src-docker-container-port \
         zaw-src-docker-container-inspect \
         zaw-src-docker-container-rm \
         zaw-rad-append-to-buffer \
@@ -17,6 +18,7 @@ function zaw-src-rad-docker-container() {
     act_descriptions=(\
         "logs" \
         "exec" \
+        "port" \
         "inspect" \
         "rm -fv" \
         "append name to buffer" \
@@ -41,6 +43,10 @@ function zaw-src-docker-container-exec() {
     BUFFER="docker exec -ti $1 $exec_command"
     zle $action
     zle end-of-line
+}
+
+function zaw-src-docker-container-port() {
+    zaw-rad-buffer-action "docker port $1"
 }
 
 function zaw-src-docker-container-inspect() {
