@@ -28,6 +28,9 @@ if ! zgen saved; then
   zgen prezto git
   zgen prezto history-substring-search
 
+  # This needs to included before any plugins that define Zaw sources (e.g., docker plugin)
+  zgen load zsh-users/zaw
+
   # Uncomment to enable Python support
   # zgen prezto python
   # zgen load robbyrussell/oh-my-zsh plugins/pip
@@ -45,7 +48,6 @@ if ! zgen saved; then
   # Uncomment to enable NVM support
   # zgen load brandon-fryslie/rad-shell nvm-lazy-load
 
-  zgen load zsh-users/zaw
   zgen load zsh-users/zsh-autosuggestions
   zgen load zsh-users/zsh-completions
 
