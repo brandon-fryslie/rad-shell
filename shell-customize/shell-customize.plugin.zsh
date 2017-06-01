@@ -40,9 +40,6 @@ setopt inc_append_history
 setopt share_history
 ## / Command history configuration
 
-# Select the first option in completions automatically
-setopt menu_complete
-
 # Setup path for homebrew
 type brew &>/dev/null && export PATH="/usr/local/sbin:$PATH"
 
