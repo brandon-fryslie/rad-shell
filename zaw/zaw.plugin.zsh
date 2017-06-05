@@ -1,5 +1,7 @@
 # Configure Zaw
 
+source "${0:a:h}/zaw-proj.zsh"
+
 # Visual/Behavioral stuff
 zstyle ':filter-select' max-lines 10
 zstyle ':filter-select' max-lines -10
