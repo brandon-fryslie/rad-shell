@@ -2,8 +2,9 @@ bindkey '^[>' zaw-rad-docker-container
 
 function zaw-src-rad-docker-container() {
     local format_string="table {{ .Names }}\\t{{ .Image }}\\t{{ .Status }}\\t{{ .Ports }}\\t{{ .Size }}"
-    local title="$(docker ps --format $format_string | head -n 1)"
-    local desc="$(docker ps -a --format $format_string | tail +2)"
+    local docker_ps_results="$(docker ps -a --format $format_string)"
+    local title="$(echo $docker_ps_results | head -n 1)"
+    local desc="$(echo $docker_ps_results | tail +2)"
     local container_id="$(echo $desc | awk '{print $1}')"
     : ${(A)candidates::=${(f)container_id}}
     : ${(A)cand_descriptions::=${(f)desc}}
