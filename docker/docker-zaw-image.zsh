@@ -6,6 +6,8 @@ function zaw-src-rad-docker-image() {
     : ${(A)candidates::=${(f)desc}}
     actions=(\
         zaw-rad-docker-image-run \
+        zaw-rad-docker-image-push \
+        zaw-rad-docker-image-pull \
         zaw-rad-docker-image-inspect \
         zaw-rad-docker-image-history \
         zaw-rad-docker-image-rmi \
@@ -14,6 +16,8 @@ function zaw-src-rad-docker-image() {
     )
     act_descriptions=(\
         "run" \
+        "push" \
+        "pull" \
         "inspect" \
         "history" \
         "rmi" \
@@ -30,6 +34,14 @@ function zaw-rad-docker-image-extract-fullname() {
 
 function zaw-rad-docker-image-run() {
     zaw-rad-buffer-action "docker run -ti $(zaw-rad-docker-image-extract-fullname $1)"
+}
+
+function zaw-rad-docker-image-push() {
+    zaw-rad-buffer-action "docker push $(zaw-rad-docker-image-extract-fullname $1)"
+}
+
+function zaw-rad-docker-image-pull() {
+    zaw-rad-buffer-action "docker pull $(zaw-rad-docker-image-extract-fullname $1)"
 }
 
 function zaw-rad-docker-image-inspect() {
