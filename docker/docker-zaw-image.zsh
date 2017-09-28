@@ -11,6 +11,7 @@ function zaw-src-rad-docker-image() {
         zaw-rad-docker-image-inspect \
         zaw-rad-docker-image-history \
         zaw-rad-docker-image-rmi \
+        zaw-rad-docker-image-tag \
         zaw-rad-docker-image-append-name-to-buffer \
         zaw-rad-docker-image-append-id-to-buffer \
     )
@@ -21,18 +22,31 @@ function zaw-src-rad-docker-image() {
         "inspect" \
         "history" \
         "rmi" \
+        "tag" \
         "append name to buffer" \
         "append id to buffer" \
     )
     options=(-t "$title" -m)
 }
 
-# Helper function to extract $image:$tag or $id from `docker image` output
+# Helper functions to extract repo, tag, and id from `docker image` output
+function zaw-rad-docker-image-extract-repo() {
+    echo $1 | awk '{print $1}'
+}
+
+function zaw-rad-docker-image-extract-tag() {
+    echo $1 | awk '{print $2}'
+}
+
+function zaw-rad-docker-image-extract-id() {
+    echo $1 | awk '{print $3}'
+}
+
 function zaw-rad-docker-image-extract-fullname() {
     local repo tag id
-    repo=$(echo $1 | awk '{print $1}')
-    tag=$(echo $1 | awk '{print $2}')
-    id=$(echo $1 | awk '{print $3}')
+    repo="$(zaw-rad-docker-image-extract-repo $1)"
+    tag="$(zaw-rad-docker-image-extract-tag $1)"
+    id="$(zaw-rad-docker-image-extract-id $1)"
 
     [[ $tag == '<none>' ]] && echo "$id" || echo "$repo:$tag"
 }
@@ -59,6 +73,18 @@ function zaw-rad-docker-image-history() {
 
 function zaw-rad-docker-image-rmi() {
     zaw-rad-buffer-action "docker rmi $(zaw-rad-docker-image-extract-fullname $1)"
+}
+
+function zaw-rad-docker-image-tag() {
+    local reply=()
+    filter-select -k -e select-action -t "enter new tag" -- "${(@)exec_candidates}"
+    [[ $? -eq 0 ]] || return $?
+
+    local repo=$(zaw-rad-docker-image-extract-repo $1)
+    local tag=$(zaw-rad-docker-image-extract-tag $1)
+    local newtag=${reply[2]}
+
+    zaw-rad-buffer-action "docker tag $repo:$tag $repo:$newtag"
 }
 
 function zaw-rad-docker-image-append-name-to-buffer() {
