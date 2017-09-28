@@ -27,9 +27,14 @@ function zaw-src-rad-docker-image() {
     options=(-t "$title" -m)
 }
 
-# Helper function to extract $image:$tag from `docker image` output
+# Helper function to extract $image:$tag or $id from `docker image` output
 function zaw-rad-docker-image-extract-fullname() {
-    echo "$(echo $1 | awk '{print $1}'):$(echo $1 | awk '{print $2}')"
+    local repo tag id
+    repo=$(echo $1 | awk '{print $1}')
+    tag=$(echo $1 | awk '{print $2}')
+    id=$(echo $1 | awk '{print $3}')
+
+    [[ $tag == '<none>' ]] && echo "$id" || echo "$repo:$tag"
 }
 
 function zaw-rad-docker-image-run() {
