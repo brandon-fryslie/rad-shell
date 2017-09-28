@@ -33,7 +33,7 @@ function zaw-rad-docker-image-extract-fullname() {
 }
 
 function zaw-rad-docker-image-run() {
-    zaw-rad-buffer-action "docker run -ti $(zaw-rad-docker-image-extract-fullname $1)"
+    zaw-rad-buffer-action "docker run -ti $(zaw-rad-docker-image-extract-fullname $1) bash"
 }
 
 function zaw-rad-docker-image-push() {
