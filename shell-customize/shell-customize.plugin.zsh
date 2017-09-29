@@ -45,3 +45,6 @@ type brew &>/dev/null && export PATH="/usr/local/sbin:$PATH"
 
 # Just so we have something
 export EDITOR=vi
+
+# Add rad-shell/bin to PATH
+export PATH="$(realpath "${0:a:h}/../bin"):$PATH"

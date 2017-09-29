@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+require_relative 'git-cmd-base'
+
+puts "Pulling --rebase repos #{REPO_PATHS.map {|p| File.basename(p)}.join(' ').cyan}"
+puts 'WIP will be stashed'.yellow.bold
+puts REPO_PATHS.map { |repo_path|
+  puts "Pulling #{File.basename(repo_path).cyan}..."
+  `git -C #{repo_path} stash && git -C #{repo_path} pull --rebase`.strip
+}

@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+require_relative 'git-cmd-base'
+
+puts "Fetching repos #{REPO_PATHS.map {|p| File.basename(p)}.join(' ').cyan}"
+REPO_PATHS.map { |repo_path|
+  puts "Fetching #{File.basename(repo_path)}..."
+  `git -C #{repo_path} fetch`
+}
