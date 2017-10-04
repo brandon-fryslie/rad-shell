@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+
+class String
+  def colorize(color_code) "\e[#{color_code}m#{self}\e[0m" end
+  def bold; colorize(1) end
+  def red; colorize(31) end
+  def green; colorize(32) end
+  def yellow; colorize(33) end
+  def cyan; colorize(36) end
+end
+
+$error_count = 0
+
+docker_host = ENV['DOCKER_HOST'] || 'bld-swarm-01:2375'
+
+puts "Using DOCKER_HOST #{docker_host.cyan}\n\n"
+
+images = `DOCKER_HOST=bld-swarm-01:2375 docker images`.lines.reduce({}) { |accum, line|
+  match = /^([^\s]+)\s+([^\s]+)\s+(\w+)/.match(line)
+
+  repo = match[1]
+  tag = match[2]
+  sha = match[3]
+
+  if accum.has_key?(sha)
+    if accum[sha][:repo] != repo || accum[sha][:tag] != tag
+      puts "Same SHA with different repo:tag combo".yellow.bold
+      puts "#{accum[sha][:repo]}:#{accum[sha][:tag]}\t#{accum[sha][:sha]}".yellow
+      puts "#{repo}:#{tag}\t#{sha}".yellow
+      puts
+      $error_count += 1
+    end
+  else
+    accum[sha] = {
+      :repo => repo,
+      :tag => tag,
+      :sha => sha
+    }
+  end
+  accum
+}
+
+if $error_count == 0
+  puts "All good!".green.bold
+end

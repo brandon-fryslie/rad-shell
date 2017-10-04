@@ -1,0 +1,128 @@
+#!/usr/bin/env ruby
+
+require File.expand_path('../docker-support', __FILE__)
+
+# gather image names
+# loop thru bin dir
+# parse scripts, get image names
+# match image names to path names and script names
+
+ALMCI_PATH = "#{ENV['HOME']}/projects/alm-ci"
+IMAGES_PATH = "#{ALMCI_PATH}/nodes/docker"
+SCRIPT_PATH = "#{ALMCI_PATH}/nodes/docker/bin"
+
+def get_info_from_script(script_contents)
+  match = script_contents.match(/image_build.sh -t docker.f4tech.com\/jenkins\/([\w.\/-]+)\s+.*?([\w-]+)$/)
+  if match.nil?
+    # try looking for image_name variable
+    match = script_contents.match(/image_name='([^']+)'/)
+    return {
+      :name => match[1],
+      :build_path => match[1]
+    }
+
+    if match.nil?
+      puts "Error!  did not match script contents:"
+      puts script_contents
+      exit
+    end
+  end
+
+  {
+    :name => match[1],
+    :build_path => match[2]
+  }
+end
+
+image_data = Dir["#{ENV['HOME']}/projects/alm-ci/nodes/docker/bin/build*.sh"].map do |script|
+  match = script.match(/build_(\w+)_image.sh/)
+  script_name = match[1]
+
+  script_contents = IO.read(script)
+  info = get_info_from_script(script_contents)
+
+  {
+    :name => info[:name],
+    :build_path => info[:build_path],
+    :script_name => script_name
+  }
+end
+
+def verify_data(data, symbol)
+  if data[symbol].nil? or data[symbol].length == 0
+    puts "Error! no #{symbol}"
+    puts data
+    exit
+  end
+end
+
+image_data.map do |image|
+  errors = 0
+  verify_data image, :name
+  verify_data image, :build_path
+  verify_data image, :script_name
+
+  unless Dir.exists?("#{IMAGES_PATH}/#{image[:build_path]}")
+    puts "Error!  build path does not exist #{"#{IMAGES_PATH}/#{image[:build_path]}"}"
+    errors += 1
+  end
+
+  if image[:name] != image[:build_path]
+    puts "build path #{image[:build_path]} doesn't match image name #{image[:name]}".red
+
+
+
+    if ARGV[0] == '--fix'
+      puts "fixing #{image[:name]}".cyan
+
+      # move directory
+      puts "Moving dir #{IMAGES_PATH}/#{image[:build_path]} => #{IMAGES_PATH}/#{image[:name]}".cyan
+      `mv #{IMAGES_PATH}/#{image[:build_path]} #{IMAGES_PATH}/#{image[:name]}`
+
+      # rewrite script
+      puts "Rewriting script with new image name #{image[:name]}"
+      script_path = "#{SCRIPT_PATH}/build_#{image[:script_name]}_image.sh"
+      script_contents = IO.read(script_path)
+
+      new_script_contents = script_contents.gsub(/#{image[:build_path]}$/, image[:name]).gsub(/\/#{image[:build_path]}\//, "/#{image[:name]}/")
+
+      IO.write(script_path, new_script_contents)
+
+
+    end
+
+    errors += 1
+  end
+
+  if image[:name].gsub('-', '_') != image[:script_name]
+    puts "script_name: #{image[:script_name]} doesn't match #{image[:name]}".red
+
+    if ARGV[0] == '--fix'
+      # rename script
+      script_path = "#{SCRIPT_PATH}/build_#{image[:script_name]}_image.sh"
+
+      new_script_name = image[:name].gsub('-', '_')
+      new_script_path = "#{SCRIPT_PATH}/build_#{new_script_name}_image.sh"
+      puts "Renaming script #{script_path} => #{new_script_path}".cyan
+      `mv #{script_path} #{new_script_path}`
+
+      # rewrite docker slaves job
+      slave_job_script_path = "#{ENV['HOME']}/projects/alm-ci/jobs/dsl/infra/docker_slaves_job.groovy"
+      slave_job_contents = IO.read(slave_job_script_path)
+      match = slave_job_contents.match(/'(#{image[:script_name]})'/)
+      puts "No matching entry in docker slaves for #{image[:script_name]}" unless match
+      if match
+        puts "Rewriting docker slaves job with new script name #{new_script_name}"
+        IO.write(slave_job_script_path, slave_job_contents.gsub(/'(#{image[:script_name]})'/, "'#{new_script_name}'"))
+      end
+
+    end
+
+
+    errors += 1
+  end
+
+  if errors == 0
+    puts "#{image[:name]} good".green
+  end
+end

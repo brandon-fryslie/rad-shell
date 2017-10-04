@@ -207,3 +207,5 @@ compctl -K _dhost_completion dhost
 
 # Enable Docker Prompt
 export ENABLE_DOCKER_PROMPT=true
+
+export PATH="$(realpath "${0:a:h}/../bin/docker"):$PATH"

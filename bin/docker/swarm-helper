@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'open3'
+require File.expand_path('../DockerSupport', __FILE__)
+
+# runs a command against all nodes in the swarm individually to avoid blocking the swarm
+
+def run_command(docker_host, command)
+  ENV['DOCKER_HOST'] = docker_host
+  stdin, stdout, stderr = Open3.popen3(command)
+  [stdout, stderr]
+end
+
+command = ARGV[-1]
+puts "Running command: #{command}".bold
+
+DockerSupport.all_hosts do |docker_host|
+  stdout, stderr = run_command(docker_host, command)
+  [docker_host, stdout, stderr]
+end.map do |(docker_host, stdout, stderr)|
+  puts "Running against #{docker_host}".bold.cyan
+
+  out = stdout.readlines
+  err = stderr.readlines
+  puts out if out
+  puts err if err
+end

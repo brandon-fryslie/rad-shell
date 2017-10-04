@@ -1,0 +1,127 @@
+#!/usr/bin/env ruby
+
+require 'json'
+
+class String
+  def colorize(color_code) "\e[#{color_code}m#{self}\e[0m" end
+  def bold; colorize(1) end
+  def red; colorize(31) end
+  def green; colorize(32) end
+  def yellow; colorize(33) end
+  def cyan; colorize(36) end
+end
+
+$error_count = 0
+
+def fetch_slm_version()
+  out = {}
+  `curl -s https://rally1.rallydev.com/slm/version.html`.gsub(/\<\/?\w+\>/, '').split("\n")[2..-1].each { |item|
+    items = item.split(':')
+    out[items[0].strip] = items[1].strip
+  }
+  out
+end
+
+def get_job_url(job_name)
+  "http://bld-almci-01.f4tech.com/job/infra/job/alm-prod/job/#{job_name}/lastSuccessfulBuild/api/json"
+end
+
+# The COMMIT_ID of the job should match the appserver_config_version in prod
+def verify_alm_prod_code_node_image(alm_prod_commit_sha)
+  puts 'Verifying alm-prod-code-node image'.yellow
+  job_data = JSON.parse(`curl -s #{get_job_url('alm-prod-code-image-build')}`)
+
+  prod_code_node_commit_sha = job_data['actions']
+                                .find { |item| item.has_key?('parameters') }['parameters']
+                                .find { |item| item['name'] == 'COMMIT_ID' }['value']
+
+  if prod_code_node_commit_sha != alm_prod_commit_sha
+    puts 'Error!  alm-prod-code-node is not running the same commit as production'.red
+    puts "alm-prod-code-node commit sha: #{prod_code_node_commit_sha}".red
+    puts "prod commit sha: #{alm_prod_commit_sha}".red
+    $error_count += 1
+  else
+    puts "alm-prod-code-node is running #{prod_code_node_commit_sha}, the same commit as production".green
+  end
+end
+
+def verify_alm_services_image(alm_prod_build_string)
+  puts 'Verifying alm-services image'.yellow
+  job_data = JSON.parse(`curl -s #{get_job_url('alm-prod-services-image-build')}`)
+
+  # This is the alm build string: almci-master-xxxxx
+  alm_services_build_string = job_data['actions']
+                                .find { |item| item.has_key?('parameters') }['parameters']
+                                .find { |item| item['name'] == 'APPSERVER_CONFIG_VERSION' }['value']
+
+  if alm_services_build_string != alm_prod_build_string
+    puts 'Error!  alm-services image is not running the same build as production'.red
+    puts "alm-services build: #{alm_services_build_string}".red
+    puts "prod build: #{alm_prod_build_string}".red
+    $error_count += 1
+  else
+    puts "alm-services is running #{alm_services_build_string}, the same build as production".green
+  end
+end
+
+def verify_alm_prod_db_image(alm_prod_commit_sha)
+  puts 'Verifying oracle-12c:alm-prod image'.yellow
+  job_data = JSON.parse(`curl -s #{get_job_url('alm-prod-db-image-build')}`)
+
+  alm_prod_db_image_commit_sha = job_data['actions']
+                                  .find { |item| item.has_key?('parameters') }['parameters']
+                                  .find { |item| item['name'] == 'PROD_COMMIT_ID' }['value']
+
+  if alm_prod_db_image_commit_sha != alm_prod_commit_sha
+    puts 'Error!  oracle-12c:alm-prod is not running the same commit as production'.red
+    puts "oracle-12c:alm-prod commit sha: #{alm_prod_db_image_commit_sha}".red
+    puts "prod commit sha: #{alm_prod_commit_sha}".red
+    $error_count += 1
+  else
+    puts "oracle-12c:alm-prod is running #{alm_prod_db_image_commit_sha}, the same commit as production".green
+  end
+end
+
+# verify no duplicates
+
+
+def verify_no_duplicates()
+  images = [
+    { :name => 'alm-prod-code-node', :tag => 'latest' },
+    { :name => 'alm-services', :tag => 'latest' },
+    { :name => 'oracle-12c', :tag => 'alm-prod' }
+  ]
+
+  image_errors = 0
+  images_output = `DOCKER_HOST=tcp://bld-swarm-01:2375 docker images | tail -n +2`.lines
+
+  images.each { |image|
+    puts "Verifying no duplicates for #{image[:name]}:#{image[:tag]}".yellow
+    image_count = images_output.select { |line| line.match(/#{image[:name]}\s+#{image[:tag]}/) }.length
+    if image_count > 1
+      puts "Error!  Found #{image_count} images called #{image[:name]}:#{image[:tag]}".red
+      image_errors += 1
+    else
+      puts "No duplicates found for #{image[:name]}:#{image[:tag]}".green
+    end
+  }
+
+  if image_errors > 0
+    $error_count += 1
+  end
+end
+
+# Fetch information about prod ALM
+slm_version = fetch_slm_version()
+
+# Verify images
+verify_alm_prod_code_node_image slm_version['appserver-config']
+verify_alm_services_image "#{slm_version['alm-version']}-#{slm_version['alm-build']}"
+verify_alm_prod_db_image slm_version['appserver-config']
+verify_no_duplicates()
+
+if $error_count == 0
+  puts 'Everything looks good!'.green.bold
+end
+
+exit $error_count == 0 ? 0 : 1

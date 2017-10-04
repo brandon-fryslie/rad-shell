@@ -1,0 +1,119 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+options = {:password => nil, :mode => :test}
+
+parser = OptionParser.new do|opts|
+	opts.banner = "Usage: years.rb [options]"
+	opts.on('-p', '--password password', 'Server Password') do |password|
+		options[:password] = password;
+	end
+
+	opts.on('-m', '--mode mode', 'Current mode. Available modes: test status restart') do |mode|
+		options[:mode] = mode.to_sym;
+	end
+
+	opts.on('-h', '--help', 'Displays Help') do
+		puts opts
+		exit
+	end
+end
+
+parser.parse!
+
+if options[:password] == nil
+  puts "Please enter a --password"
+  exit(0)
+end
+
+puts "Current mode: #{options[:mode]}"
+
+# check docker host for running containers
+# if no running containers, ssh in and run service docker restart
+
+def get_docker_host(hostname)
+  "tcp://#{hostname}:4243"
+end
+
+def get_server_version(docker_host)
+  out = `DOCKER_HOST=#{docker_host} docker ps 2>&1`.strip
+  server_version = ''
+
+  if out =~ /don't have same version|client is newer than server/
+    match = /server:\s+([\d\.]+)/.match(out) || /server API version:\s+([\d\.]+)/.match(out)
+    server_version = "DOCKER_API_VERSION=#{match[1]}"
+  end
+
+  return server_version
+end
+
+def num_containers_running(hostname)
+  docker_host = get_docker_host(hostname)
+  server_version = get_server_version(docker_host)
+  out = `#{server_version} DOCKER_HOST=#{docker_host} docker ps 2>&1 | tail -n +2`
+  return out.split("\n").length
+end
+
+def get_running_containers
+  do_for_docker_host do |hostname|
+    puts "found #{num_containers_running(hostname)} containers running on #{hostname}"
+  end
+end
+
+def do_for_docker_host
+  (1..32).each do |n|
+    yield "bld-docker-#{n.to_s.rjust(2, '0')}"
+  end
+end
+
+require 'pty'
+require 'expect'
+
+def run_interactive command, password, prompt
+  output   = ''
+  begin
+    r, w, pid = PTY.spawn(command)
+    puts r.expect(prompt, 3)
+    sleep(0.5)
+    w.puts(password)
+    yield r, w
+    Process.wait(pid)
+  rescue PTY::ChildExited => e
+    $stderr.puts "The child process #{e} exited! #{$!.status.exitstatus}"
+  end
+  output
+end
+
+def run_ssh_cmd hostname, cmd, password
+  output = ''
+  run_interactive "ssh root@#{hostname}", "#{password}\n", /./ do |r, w|
+    w.write("#{cmd}\n")
+    w.write("exit\n")
+    begin
+      r.each { |l| output += l }
+    rescue Errno::EIO
+    end
+  end
+  output
+end
+
+def restart_docker_service hostname, options
+	cmd = if options[:mode] == :status then "service docker status" else 'service docker restart' end
+  output = run_ssh_cmd hostname, cmd, options[:password]
+	output.split("\n").select {|line| /^docker/.match(line) }
+end
+
+def restart_if_empty(options)
+  test_mode = options[:mode] == :test
+  do_for_docker_host do |hostname|
+    if num_containers_running(hostname) == 0
+      puts "#{if test_mode then 'TEST_MODE ' end}docker host #{hostname} is empty. #{if test_mode then 'checking docker status...' else 'restarting docker service...' end}"
+			if !test_mode
+      	puts restart_docker_service hostname, options
+			end
+    end
+  end
+end
+
+restart_if_empty options

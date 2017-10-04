@@ -1,0 +1,82 @@
+#!/usr/bin/env ruby
+
+# This script distributes an image to our swarm
+# 1.  Pulls image:next
+# 2.  Tags repo:next to repo:latest
+# 3.  Untags repo:next
+
+require File.expand_path('../docker-support', __FILE__)
+
+repo = ARGV[0]
+$docker_host = 'tcp://bld-swarm-01:2375'
+
+if repo.nil? or repo == ''
+  abort 'You need to provide a docker image on which the script can operate'.yellow
+end
+
+def check_for_previous(repo)
+  puts "Checking for existence of #{repo}:previous".yellow
+  out = `DOCKER_HOST=#{$docker_host} docker images | grep #{repo} | grep -q previous 2&>1`
+  puts out if /^\s+$/.match(out)
+
+  if $? == 0
+    abort "Found image #{repo}:previous".red
+  else
+    puts "Did not find #{repo}:previous".green
+  end
+end
+
+def tag_latest_to_previous(repo)
+  puts "Tagging #{repo}:latest to #{repo}:previous".yellow
+  out = `DOCKER_HOST=#{$docker_host} docker tag #{repo}:latest #{repo}:previous 2&>1`
+  puts out if /^\s+$/.match(out)
+
+  if $? != 0
+    abort "Error tagging #{repo}:latest to #{repo}:previous".red
+  else
+    puts "Tagged #{repo}:latest to #{repo}:previous".green
+  end
+end
+
+def pull_next(repo)
+  puts "Pulling #{repo}:next to all hosts...".yellow
+  puts `DOCKER_HOST=#{$docker_host} docker pull #{repo}:next 2&>1`
+
+  if $? != 0
+    abort "Error pulling #{repo}".red
+  else
+    puts "Pulled #{repo} to all hosts".green
+  end
+end
+
+def tag_next_to_latest(repo)
+  puts "Tagging #{repo}:next to #{repo}:latest...".yellow
+  puts `DOCKER_HOST=#{$docker_host} docker tag #{repo}:next #{repo}:latest 2&>1`
+
+  if $? != 0
+    abort "Error tagging #{repo}:next to #{repo}:latest".red
+  else
+    puts "Tagged #{repo}:next to #{repo}:latest".green
+  end
+end
+
+def untag_next(repo)
+  puts "Untagging #{repo}:next...".yellow
+  puts DockerSupport.all_hosts do |host|
+    `DOCKER_HOST=#{$docker_host} docker rmi #{repo}:next 2&>1`
+  end
+
+  if $? != 0
+    puts "Error removing #{repo}:next on #{host}".red
+  else
+    puts "Untagged #{repo}:next on #{host}".green
+  end
+end
+
+check_for_previous(repo)
+tag_latest_to_previous(repo)
+pull_next(repo)
+tag_next_to_latest(repo)
+
+# todo: print all SHAs, and allow user to decide whether they want to remove next
+# untag_next(repo)

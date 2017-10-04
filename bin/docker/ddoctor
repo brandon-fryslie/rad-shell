@@ -1,0 +1,93 @@
+#!/usr/bin/env ruby
+
+require File.expand_path('../DockerSupport', __FILE__)
+
+$error_count = 0
+
+# This script checks docker swarm for some things that might be screwed up
+# - checks for untagged images
+# - checks for duplicate tags - todo (broken)
+# - checks for rogue images - images that aren't in a repo - todo
+# - checks for differenly tagged images that have the same SHA - todo
+# - checks for images tagged next - todo
+# - checks for exited containers - todo
+# - get data by host - working!
+# - runs on all CAAC docker hosts
+#   - swarm
+#   - testn swarm tcp://bld-testn-01:2375
+#   - magnumci tcp://bld-magnumci-02:2375
+#   - almci tcp://bld-almci-01:2375
+# - verify DB images are current on all docker_db hosts
+
+def transform_hosts_for_output(image)
+  image[:hosts].map { |host|
+    host = host.empty? ? 'local' : host
+    match = /bld-docker-(\d\d)/.match(host)
+    match.nil? ? host : match[1]
+  }.join(' ')
+end
+
+def output_image_data(image_list, color=nil)
+  image_list.each do |image|
+    hosts = transform_hosts_for_output image
+    raw_format_string = "- %-60s %-20s %s\n"
+    format_string = color ? raw_format_string.send(color) : raw_format_string
+    printf format_string, "#{image[:repo]}:#{image[:tag]}", "#{image[:sha]}", "hosts: #{hosts}"
+  end
+end
+
+def check_untagged_images(image_list)
+  untagged_images = image_list.select { |image| image[:tag] == '<none>' }
+
+  if untagged_images.length > 0
+    $error_count += 1
+    puts "Found #{untagged_images.length} untagged images:".yellow
+    output_image_data untagged_images.sort { |a,b| b[:repo] <=> a[:repo] }, 'yellow'
+  else
+    puts "No untagged images".green
+  end
+end
+
+def get_duplicate_tags(image_list)
+  res = image_list.reduce(Hash.new) do |accum, image|
+    if accum.has_key?(image[:full_name])
+      accum[image[:full_name]][:count] += 1
+    else
+      accum[image[:full_name]] = { :image => image, :count => 1 }
+    end
+    accum
+  end.values.map do
+    |data| [data[:image], data[:count]]
+  end.select do
+    |(image, count)| count > 1
+  end
+end
+
+def check_duplicate_tags(image_list)
+  duplicate_tags = get_duplicate_tags(image_list)
+
+  if duplicate_tags.length > 0
+    $error_count += 1
+    puts "Found duplicate repo:tag combinations: ".yellow
+    duplicate_tags.each { |(image, count)|
+      format_string = "- %-60s\n"
+      hosts = transform_hosts_for_output image
+      printf format_string.yellow, "#{image[:full_name]} (#{count})"
+    }
+  else
+    puts "No duplicate repo:tag combinations".green
+  end
+
+end
+
+# do the things
+image_list = DockerSupport.get_docker_image_data
+
+check_untagged_images(image_list)
+check_duplicate_tags(image_list)
+
+if $error_count == 0
+  puts "Everything looks good!".green
+end
+
+exit $error_count == 0 ? 0 : 1
