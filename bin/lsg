@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require_relative 'git-cmd-base'
 
-def print_status_string(repo_path)
+def get_status_string(repo_path)
   git_cmd = "git -C #{repo_path}"
 
   # check the status to flush a cache somewhere
@@ -17,8 +17,8 @@ def print_status_string(repo_path)
   remote = `#{git_cmd} rev-parse --verify #{branch}@{upstream} --symbolic-full-name --abbrev-ref 2>/dev/null`.strip
 
   # Repo has staged/unstaged changes
-  staged = `#{git_cmd} diff-index --cached HEAD --ignore-submodules --`.strip.length > 0 ? 'S'.bold.green : ''
-  unstaged = `#{git_cmd} diff-files --ignore-submodules --`.strip.length > 0 ? 'U'.bold.red : ''
+  staged = `#{git_cmd} diff-index --cached HEAD --ignore-submodules -- 2>/dev/null`.strip.length > 0 ? 'S'.bold.green : ''
+  unstaged = `#{git_cmd} diff-files --ignore-submodules -- 2>/dev/null`.strip.length > 0 ? 'U'.bold.red : ''
   staged_unstaged = (staged.length > 0 || unstaged.length > 0) ? " #{staged}#{unstaged} " : ''
 
   # current branch + remote tracking if any
@@ -36,7 +36,9 @@ def print_status_string(repo_path)
     (has_ahead && !has_behind ? " (#{'+'.green + ahead.green})" : '') +
     (has_behind && !has_ahead ? " (#{'-'.red + behind.red})" : '')
 
-  puts "#{File.basename(repo_path)} #{staged_unstaged}[#{branch_info}]#{ahead_behind_counter}"
+  "#{File.basename(repo_path)} #{staged_unstaged}[#{branch_info}]#{ahead_behind_counter}"
 end
 
-REPO_PATHS.each {|repo_path| print_status_string repo_path}
+REPO_PATHS.map do |repo_path|
+  Thread.new { get_status_string repo_path }
+end.map { |t| puts t.value }
