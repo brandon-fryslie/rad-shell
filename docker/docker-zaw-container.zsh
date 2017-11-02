@@ -27,6 +27,15 @@ function zaw-src-rad-docker-container() {
     options=(-t "$title" -m)
 }
 
+# Helper functions
+
+# Perform buffer action with multiple containers
+function zaw-rad-docker-container-multiselect-action() {
+    zaw-rad-buffer-action "$1 ${(j: :)selected}"
+}
+
+# Command functions
+
 function zaw-src-docker-container-logs() {
     BUFFER="docker logs -f $1"
     zaw-rad-action ${reply[1]}
@@ -59,7 +68,7 @@ function zaw-src-docker-container-inspect() {
 }
 
 function zaw-src-docker-container-rm() {
-    zaw-rad-buffer-action "docker rm -fv $1"
+    zaw-rad-docker-container-multiselect-action 'docker rm -fv'
 }
 
 zaw-register-src -n rad-docker-container zaw-src-rad-docker-container
