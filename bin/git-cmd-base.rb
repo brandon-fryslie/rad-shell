@@ -5,7 +5,7 @@
 #
 # Takes any number of paths, absolute or relative as command line arguments.  If
 # no arguments, uses CWD.  It also looks in all subdirectories of the directories passed in.
-# Allows you to do `lsg ~/projects` or `lsg ~/projects/{alm,churro}`
+# Allows you to do `lsg ~/my_projects` or `lsg ~/my_projects/{some_project,some_other_project}`
 #
 # Exposes a global var called REPO_PATHS that are absolute paths of repos, ready to be processed.
 

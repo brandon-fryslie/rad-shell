@@ -46,5 +46,19 @@ type brew &>/dev/null && export PATH="/usr/local/sbin:$PATH"
 # Just so we have something
 export EDITOR=vi
 
+realpath_rad ()
+{
+    f=$@;
+    if [ -d "$f" ]; then
+        base="";
+        dir="$f";
+    else
+        base="/$(basename "$f")";
+        dir=$(dirname "$f");
+    fi;
+    dir=$(cd "$dir" && /bin/pwd);
+    echo "$dir$base"
+}
+
 # Add rad-shell/bin to PATH
-export PATH="$(realpath "${0:a:h}/../bin"):$PATH"
+export PATH="$(realpath_rad "${0:a:h}/../bin"):$PATH"
