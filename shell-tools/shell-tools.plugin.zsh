@@ -3,6 +3,9 @@
 # because we type that a lot
 # includes tab completions
 #################################################################
+
+PROJECTS_DIR=${PROJECTS_DIR:-${HOME}/projects}
+
 function proj {
   cd "${PROJECTS_DIR}/$1"
 }
