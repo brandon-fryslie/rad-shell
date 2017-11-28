@@ -13,6 +13,7 @@ function zaw-src-rad-docker-container() {
         zaw-src-docker-container-exec \
         zaw-src-docker-container-port \
         zaw-src-docker-container-inspect \
+        zaw-src-docker-container-restart \
         zaw-src-docker-container-rm \
         zaw-rad-append-to-buffer \
     )
@@ -21,6 +22,7 @@ function zaw-src-rad-docker-container() {
         "exec" \
         "port" \
         "inspect" \
+        "restart" \
         "rm -fv" \
         "append name to buffer" \
     )
@@ -65,6 +67,10 @@ function zaw-src-docker-container-inspect() {
     [[ (( $+commands[jq] )) ]] && jq="| jq"
 
     zaw-rad-buffer-action "docker inspect $1 $jq"
+}
+
+function zaw-src-docker-container-restart() {
+    zaw-rad-buffer-action "docker restart $1"
 }
 
 function zaw-src-docker-container-rm() {
