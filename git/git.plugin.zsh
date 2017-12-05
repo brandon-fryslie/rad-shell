@@ -10,6 +10,16 @@ alias gs="git status"
 alias gst="git stash"
 alias lg="git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit"
 
+git config --global alias.co checkout
+git config --global alias.st status
+alias gdstat="git diff --stat"
+
+if type 'hub' &>/dev/null; then
+  alias git=hub
+fi
+
+export GIT_EDITOR="${EDITOR:-vi}"
+
 really-really-amend() {
   local branch_name=$(git rev-parse --abbrev-ref HEAD)
   local upstream_remote=${$(git rev-parse --verify "${branch_name}@{upstream}" --symbolic-full-name --abbrev-ref 2>/dev/null)%/*}

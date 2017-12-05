@@ -3,7 +3,7 @@
 install_cmd='/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
 brew_bin=/usr/local/bin/brew
 
-if [[ $(uname) == 'darwin' ]]; then
+if [[ $(uname) == 'Darwin' ]]; then
   if [[ -x $brew_bin ]]; then
     export PATH="/usr/local/bin:$PATH"
   else
