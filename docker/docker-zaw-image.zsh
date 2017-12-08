@@ -95,11 +95,12 @@ function zaw-rad-docker-image-tag() {
     filter-select -k -e select-action -t "enter new tag" -- "${(@)exec_candidates}"
     [[ $? -eq 0 ]] || return $?
 
+
     local repo=$(zaw-rad-docker-image-extract-repo $1)
-    local tag=$(zaw-rad-docker-image-extract-tag $1)
+    local fullname=$(zaw-rad-docker-image-extract-fullname "$1")
     local newtag=${reply[2]}
 
-    zaw-rad-buffer-action "docker tag $repo:$tag $repo:$newtag"
+    zaw-rad-buffer-action "docker tag $fullname $repo:$newtag"
 }
 
 function zaw-rad-docker-image-append-name-to-buffer() {
