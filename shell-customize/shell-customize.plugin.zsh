@@ -48,6 +48,7 @@ export EDITOR=vi
 
 realpath_rad ()
 {
+    local f base dir
     f=$@;
     if [ -d "$f" ]; then
         base="";
