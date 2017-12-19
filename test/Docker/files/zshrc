@@ -25,8 +25,4 @@ alias e.="${VISUAL:-vi} ."
 
 alias dog='pygmentize -g'
 
-rm -f /Users/frybr02/.sdkman/var/candidates
-rm -f /Users/frybr02/.sdkman/var/version
-source "$HOME/.sdkman/bin/sdkman-init.sh"
-
 echo "SOURCING ZSH RC!!!"

@@ -1,15 +1,14 @@
-#!/usr/bin/env bash
+#!/bin/bash -el
 
-colorize() { CODE=$1; shift; echo -e '\033[0;'$CODE'm'$@'\033[0m'; }
-bold() { echo -e $(colorize 1 $@); }
-red() { echo -e $(colorize 31 $@); }
-green() { echo -e $(colorize 32 $@); }
-yellow() { echo -e $(colorize 33 $@); }
-reset() { tput sgr0; }
+colorize() { CODE=$1; shift; echo -e '\033[0;'$CODE'm'$*'\033[0m'; }
+bold() { echo -e "$(colorize 1 "$@")"; }
+red() { echo -e "$(colorize '1;31' "$@")"; }
+green() { echo -e "$(colorize 32 "$@")"; }
+yellow() { echo -e "$(colorize 33 "$@")"; }
 
 abort() {
-  echo `red $1`
-  echo `red "Exiting..."`
+  red $1
+  red "Exiting..."
   exit 1
 }
 
@@ -35,12 +34,12 @@ zgen_setup_url="https://raw.githubusercontent.com/brandon-fryslie/rad-shell/mast
 curl -o- $zgen_setup_url > ~/.zgen-setup.zsh \
   || wget -q0- $zgen_setup_url > ~/.zgen-setup.zsh
 
-yellow "Cloing Zgen into $HOME/.zgen"
-git clone https://github.com/brandon-fryslie/zgen.git $HOME/.zgen
 
-if [[ $(uname) == Darwin ]]; then
-  yellow "Installing Fasd"
-  brew install fasd
+if [[ -d $HOME/.zgen ]]; then
+  yellow "Zgen is already cloned.  Skipping clone"
+else
+  yellow "Cloning Zgen into $HOME/.zgen"
+  git clone https://github.com/brandon-fryslie/zgen.git $HOME/.zgen
 fi
 
 green "Done!  Open a new shell."

@@ -29,15 +29,17 @@ case $HIST_STAMPS in
   *) alias history='fc -l 1' ;;
 esac
 
-setopt append_history
-setopt extended_history
-setopt hist_expire_dups_first
-setopt hist_ignore_all_dups
-setopt hist_ignore_space
-setopt hist_reduce_blanks
-setopt hist_verify
-setopt inc_append_history
-setopt share_history
+set -o append_history
+set -o extended_history
+set -o hist_expire_dups_first
+set -o hist_ignore_all_dups
+set -o hist_ignore_space
+set -o hist_reduce_blanks
+set -o hist_verify
+set -o inc_append_history
+set -o share_history
+set +o noclobber # Allow overwriting of files by redirection (many scripts assume this behavior)
+
 ## / Command history configuration
 
 # Setup path for homebrew
