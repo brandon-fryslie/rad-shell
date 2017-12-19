@@ -7,7 +7,7 @@ if [[ $(uname) == 'Darwin' ]]; then
   if [[ -x $brew_bin ]]; then
     export PATH="/usr/local/bin:$PATH"
   else
-    echo "Installing Homebrew with command ${install_cmd}"
+    rad-red "Installing Homebrew with command ${install_cmd}"
     $install_cmd
   fi
 fi

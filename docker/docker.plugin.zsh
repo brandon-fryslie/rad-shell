@@ -18,11 +18,11 @@ alias dc="docker-compose"
 dlogs() {
   local container_info=$(dfirst "$@")
   container_info=$(echo $container_info | tr '\n' ' ')
-  [[ $container_info =~ "^[[:space:]]+$" ]] && { echo "Error: no container found"; return 1}
+  [[ $container_info =~ "^[[:space:]]+$" ]] && { rad-red "Error: no container found matching query string '$@'"; return 1}
 
   container_image=$(echo $container_info | awk '{print $2}')
   container_name=$(echo $container_info | awk '{print $3}')
-  echo "Showing logs of container $container_name running image $container_image..."
+  rad-yellow "Showing logs of container $container_name running image $container_image..."
   docker logs -f $container_name
 }
 
@@ -60,7 +60,7 @@ dsearch() {
       -q) local QUIET=true; shift;;
       -aq|-qa) local QUIET=true; local ALL_IMAGES=-a; shift;;
       -d) local DEBUG=true; shift;;
-      -*) echo "Unknown option: $1"; return 1;;
+      -*) rad-red "Unknown option: $1"; return 1;;
       *)
         # Handle search strings here
         if [[ -z $search_string ]]; then
@@ -84,11 +84,11 @@ dsearch() {
   [[ $QUIET == true ]] && cmd="$cmd | awk '{print \$1}'"
 
   if [[ $DEBUG == true ]]; then
-    echo "DEBUG MODE ON"
-    echo "ALL_IMAGES: $ALL_IMAGES"
-    echo "QUIET: $QUIET"
-    echo "search string: $search_string"
-    echo "running command: $cmd"
+    rad-yellow "DEBUG MODE ON"
+    rad-yellow "ALL_IMAGES: $ALL_IMAGES"
+    rad-yellow "QUIET: $QUIET"
+    rad-yellow "search string: $search_string"
+    rad-yellow "running command: $cmd"
   fi
 
   eval "$cmd"
@@ -111,7 +111,7 @@ dexec() {
 
     case $key in
       -c|--command) command="$2"; shift; shift;;
-      -*) echo "Unknown option: $1"; return 1;;
+      -*) rad-red "Unknown option: $1"; return 1;;
       *) search_strings+=("$1"); shift;;
     esac
   done
@@ -130,7 +130,7 @@ dhost-alias() {
 
 dhost() {
   if [ -z "$1" ]; then
-      echo $DOCKER_HOST
+      rad-yellow $DOCKER_HOST
       return
   fi
 
@@ -140,7 +140,7 @@ dhost() {
 
   if [[ $host_string == local ]] || [[ $host_string == unset ]]; then
     unset DOCKER_HOST
-    echo "unsetting DOCKER_HOST"
+    rad-yellow "unsetting DOCKER_HOST"
     return 0
   fi
 
@@ -163,7 +163,7 @@ dhost() {
   fi
 
   export DOCKER_HOST=$dhost
-  echo "DOCKER_HOST=$dhost"
+  rad-yellow "DOCKER_HOST=$dhost"
 }
 
 # Completions for Dhost command
