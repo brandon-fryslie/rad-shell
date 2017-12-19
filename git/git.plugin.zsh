@@ -23,8 +23,14 @@ export GIT_EDITOR="${EDITOR:-vi}"
 really-really-amend() {
   local branch_name=$(git rev-parse --abbrev-ref HEAD)
   local upstream_remote=${$(git rev-parse --verify "${branch_name}@{upstream}" --symbolic-full-name --abbrev-ref 2>/dev/null)%/*}
+  [[ -z $upstream_remote ]] && upstream_remote=origin
 
-  if [ "$branch_name" = "master" ]; then
+  if [[ $upstream_remote != origin ]] && [[ $upstream_remote != upstream ]]; then
+    echo "Not force pushing to upstream '$upstream_remote'"
+    return 1
+  fi
+
+  if [[ $branch_name == master ]]; then
     echo "Don't do this on master, dummy"
     return 1
   fi
