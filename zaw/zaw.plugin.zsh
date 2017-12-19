@@ -2,6 +2,12 @@
 
 source "${0:a:h}/zaw-proj.zsh"
 
+# Installing FASD if necessary
+if [[ $(uname) == Darwin ]] && ! type 'fasd' &>/dev/null; then
+  rad-yellow "Installing Fasd"
+  brew install fasd
+fi
+
 # Visual/Behavioral stuff
 zstyle ':filter-select' max-lines 10
 zstyle ':filter-select' max-lines -10
