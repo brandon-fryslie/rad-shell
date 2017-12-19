@@ -38,9 +38,6 @@ if ! zgen saved; then
   # Uncomment to enable Ruby support
   # zgen prezto ruby
 
-  # Uncomment to enable Tmux support
-  # zgen prezto tmux
-
   # Uncomment to enable Docker support
   # zgen load robbyrussell/oh-my-zsh plugins/docker
   # zgen load brandon-fryslie/rad-shell docker
