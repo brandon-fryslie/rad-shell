@@ -39,8 +39,4 @@ function zaw-src-dev-edit() {
     zaw-rad-action ${reply[1]}
 }
 
-function zaw-src-docker-container-rm() {
-    zaw-rad-dev-multiselect-action 'docker rm -fv'
-}
-
 zaw-register-src -n rad-dev zaw-src-rad-dev
