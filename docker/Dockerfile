@@ -9,8 +9,6 @@ RUN apt-get install -y sudo docker.io
 USER rad
 WORKDIR /home/rad
 
-RUN curl -o- https://raw.githubusercontent.com/brandon-fryslie/rad-shell/master/install.sh | bash \
+COPY deps/install.sh /tmp/install.sh
+RUN /tmp/install.sh \
   && zsh -l -c ". ~/.zshrc"
-
-COPY files/zshrc $HOME/.zshrc
-COPY files/zgen-setup.zsh $HOME/.zgen-setup.zsh
