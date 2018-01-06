@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh -l
+#!/usr/bin/env zsh
 
 # Script to manage rad-shell installation
 
