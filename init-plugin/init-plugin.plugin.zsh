@@ -30,5 +30,5 @@ rad-realpath() {
 }
 
 export RAD_SHELL_DIR="$(rad-realpath "${0:a:h}/..")"
-export PATH="$PATH:$RAD_SHELL_DIR"
+export PATH="$PATH:$RAD_SHELL_DIR/bin"
 
