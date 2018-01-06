@@ -37,7 +37,6 @@ create_newline_transform_stream = ->
       @push @_lastLineData
       @_lastLineData = null
 
-
 create_prefix_transform_stream = (prefix) ->
   create_transform_stream (line) ->
     @push "#{prefix} #{line}\n"

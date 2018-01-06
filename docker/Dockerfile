@@ -11,4 +11,9 @@ WORKDIR /home/rad
 
 COPY deps/install.sh /tmp/install.sh
 RUN /tmp/install.sh \
-  && zsh -l -c ". ~/.zshrc"
+  && zsh -l -c ". ~/.zshrc" \
+  && rm -rf /home/rad/.zgen/brandon-fryslie/rad-shell-master
+
+COPY deps/rad-shell-master /home/rad/.zgen/brandon-fryslie/rad-shell-master
+
+RUN cat /home/rad/.zgen/brandon-fryslie/rad-shell-master/bin/rad.sh
