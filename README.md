@@ -33,13 +33,7 @@ This script:
 <sub>Note: the install script will only work on macOS due to the use of `homebrew`.
 Some of the key bindings may also need to be adjusted for other OS's.</sub>
 
-### Other installation options
-
-There are two other choices:
-
-1.  Clone this repo, then run `install.rb.`  You can also run `install.rb --clean` to remove everything.
-
-or
+### Other installation option
 
 1.  Install (forked) Zgen: `git clone https://github.com/brandon-fryslie/zgen "${HOME}/.zgen"`
 1.  Install Fasd if desired (substitute your own package manager if not on macOS): `brew install fasd`
