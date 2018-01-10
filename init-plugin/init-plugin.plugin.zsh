@@ -14,6 +14,9 @@ rad-bold() { echo -e "$(rad-colorize 1 "$@")"; }
 rad-red() { echo -e "$(rad-colorize '1;31' "$@")"; }
 rad-green() { echo -e "$(rad-colorize 32 "$@")"; }
 rad-yellow() { echo -e "$(rad-colorize 33 "$@")"; }
+rad-blue() { echo -e "$(rad-colorize '1;34' "$@")"; }
+rad-magenta() { echo -e "$(rad-colorize 35 "$@")"; }
+rad-cyan() { echo -e "$(rad-colorize 36 "$@")"; }
 
 rad-realpath() {
   local f base dir
