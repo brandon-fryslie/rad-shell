@@ -1,0 +1,33 @@
+{
+  "name": "rad-shell-tests",
+  "private": true,
+  "version": "0.2.0",
+  "description": "This is only used for running tests",
+  "keywords": [
+    "rad-shell",
+    "cli"
+  ],
+  "scripts": {
+    "test": "mocha --exit --require coffee-script/register \"test/*.coffee\"",
+    "test-branch": "RAD_SHELL_BRANCH=$(git -C ~/.zgen/brandon-fryslie/rad-shell-master symbolic-ref -q --short HEAD) npm run test"
+  },
+  "author": "Brandon Fryslie",
+  "license": "ISC",
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "dependencies": {
+    "coffee-script": "^1.10.0",
+    "colors": "^1.0.3",
+    "es6-promise": "^3.1.2",
+    "lodash": "^4.6.1"
+  },
+  "preferGlobal": true,
+  "yargs": {
+    "camel-case-expansion": false
+  },
+  "devDependencies": {
+    "mocha.parallel": "^0.12.0",
+    "temp": "^0.8.3"
+  }
+}
