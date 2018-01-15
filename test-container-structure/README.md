@@ -32,10 +32,21 @@ set up correctly.
 
 `cd container-structure-test`
 
-`make cross`
+Now we need to install the go dependencies and the Makefile.  This is how I did 
+it.  If you know what you are doing with go (I do not), I'm sure this could be improved.
 
-This will create a file in ./out named `structure-test-darwin-amd64`.
+Requires `wgo` and `wgo-exec`: https://github.com/skelterjohn/wgo.
+
+Install wgo: `go get github.com/skelterjohn/wgo`
+
+Install wgo-exec: `go get github.com/skelterjohn/wgo/wgo-exec`
+
+Use wgo to install dependencies from Godeps file: `wgo init && wgo save --godeps && wgo restore`
+
+Run Makefile w/ dependencies installed with wgo: `wgo-exec make cross`
+
+This will create a file in `./out` named `structure-test-darwin-amd64`.
 
 Run `ln -s $(pwd)/out/structure-test-darwin-amd64 /usr/local/bin/structure-test` to symlink the executable to your $PATH.
 
-You can then run ./run.sh to run the tests.
+You can then run `./run.sh` to run the tests.
