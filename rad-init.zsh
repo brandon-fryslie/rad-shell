@@ -8,6 +8,9 @@ zstyle ':prezto:module:terminal' auto-title 'yes'
 zstyle ':prezto:module:terminal:window-title' format '%n@%m'
 zstyle ':prezto:module:terminal:tab-title' format '%s'
 
+# Remove alias 'rm' -> 'rm -i' if it exists
+alias rm &>/dev/null && unalias rm
+
 # Use bash-style word delimiters
 autoload -U select-word-style
 select-word-style bash
