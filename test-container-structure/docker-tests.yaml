@@ -1,0 +1,14 @@
+schemaVersion: "2.0.0"
+
+commandTests:
+
+  - name: "docker plugin is installed"
+    setup: [
+      ["zsh", "-c", "echo brandon-fryslie/zaw >> $HOME/.rad-plugins"],
+      ["zsh", "-c", "echo brandon-fryslie/rad-plugins zaw >> $HOME/.rad-plugins"],
+      ["zsh", "-c", "echo brandon-fryslie/rad-plugins docker >> $HOME/.rad-plugins"],
+      ["zsh", "-c", "source ~/.zshrc"]
+    ]
+    command: "zsh"
+    args: ["-l", "-c", "which dfirst"]
+    expectedOutput: ["dsearch \"$@\" | head -n 1"]

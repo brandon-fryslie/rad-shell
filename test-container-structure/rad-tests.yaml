@@ -1,0 +1,22 @@
+schemaVersion: "2.0.0"
+
+commandTests:
+
+# check that the rad.sh script is in the correct location
+  - name: "rad shell installation"
+    command: "zsh"
+    args: ["-l", "-c", "which rad.sh"]
+    expectedOutput: ["/home/rad/.zgen/brandon-fryslie/rad-shell-master/bin/rad.sh"]
+
+# check that the .rad-shell directory is located at $HOME/.rad-shell and is a symlink
+  - name: "rad shell directory is symlink to $HOME/.zgen/brandon-fryslie/rad-shell-master"
+    command: "zsh"
+    args: ["-l", "-c", "ls -la $HOME/.rad-shell"]
+    expectedOutput: ["rad-shell-master -> /home/rad/.zgen/brandon-fryslie/rad-shell-master/"]
+
+# can install plugin
+  - name: "can install plugin"
+    setup: [ ["zsh", "-c", "echo brandon-fryslie/zaw >> $HOME/.rad-plugins && source ~/.zshrc"] ]
+    command: "zsh"
+    args: ["-l", "-c", "[[ -d ~/.zgen/brandon-fryslie/zaw-master ]]"]
+
