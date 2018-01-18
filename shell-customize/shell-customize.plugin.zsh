@@ -42,9 +42,6 @@ set +o noclobber # Allow overwriting of files by redirection (many scripts assum
 
 ## / Command history configuration
 
-# Setup path for homebrew
-type brew &>/dev/null && export PATH="/usr/local/sbin:$PATH"
-
 # Just so we have something
 export EDITOR=vi
 
