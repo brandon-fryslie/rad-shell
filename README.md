@@ -10,36 +10,22 @@ Compatible with Oh-My-Zsh and Prezto plugins out of the box.
 
 Set Zsh as your default shell, if necessary: `chsh -s /bin/zsh`
 
-With Curl:
-
 ```sh
 curl -o- https://raw.githubusercontent.com/brandon-fryslie/rad-shell/master/install.sh | bash
 ```
 
-or Wget:
+This script:
+- Backs up any existing ~/.zshrc!
+- Writes a shiny new ~/.zshrc file!
+- Writes a ~/.rad-plugins file to keep track of your rad plugins!
+- Clones Zgen!
+- Clones the plugin repos and configures your new rad shell!
+
+If you want to install rad-shell **without any default plugins**, use this command:
 
 ```sh
-wget -qO- https://raw.githubusercontent.com/brandon-fryslie/rad-shell/master/install.sh | bash
+export SKIP_DEFAULT_PLUGINS=true; curl -o- https://raw.githubusercontent.com/brandon-fryslie/rad-shell/master/install.sh | bash
 ```
-
-This script:
-- Backs up ~/.zshrc to ~/.zshrc.bak, if ~/.zshrc exists
-  - Will exit if both ~/.zshrc and ~/.zshrc.bak exist
-- Writes a new ~/.zshrc file
-- Writes a ~/.zgen-setup.zsh file that contains Zsh plugin configuration
-- Clones the (forked) Zgen repo
-- Installs Fasd
-
-<sub>Note: the install script will only work on macOS due to the use of `homebrew`.
-Some of the key bindings may also need to be adjusted for other OS's.</sub>
-
-### Other installation option
-
-1.  Install (forked) Zgen: `git clone https://github.com/brandon-fryslie/zgen "${HOME}/.zgen"`
-1.  Install Fasd if desired (substitute your own package manager if not on macOS): `brew install fasd`
-  - Fasd keeps track of recently used files and directories.  Related Functionality won't work without Fasd
-1.  Copy the contents of `.zshrc.zgen` and `.zgen-setup.zsh` from this repo to `~/.zshrc` and `~/.zgen-setup.zsh`
-1.  Copy your own customizations into ~/.zshrc if desired
 
 ## Usage
 
@@ -84,7 +70,7 @@ set to 'Esc+' in the iTerm settings.
 You can set that by running this command **with iTerm closed** (use Terminal):
 `/usr/libexec/PlistBuddy -c 'Set :"New Bookmarks":0:"Option Key Sends" 2' ~/Library/Preferences/com.googlecode.iterm2.plist`
 
-#### Filter search commands
+#### FilterList commands
 
 These commands will display a filterable list that you can choose from.
 

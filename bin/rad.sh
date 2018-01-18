@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-# Script to manage rad-shell installation
+# Script to manage rad-shell
 
 set -e
 
@@ -13,12 +13,25 @@ yellow() { echo -e "$(colorize 33 "$@")"; }
 script_dir="$( cd "$( dirname "${0:a:h}" )" && pwd )"
 
 # Command functions
+
+# TODO
 plugin-cmd() {
   local command=$1
+  red "command: rad.sh plugin $1 not implemented"
 }
 
 version-cmd() {
   cat $script_dir/VERSION
+}
+
+byebye-cmd() {
+  local zshrc_bak="$HOME/.zshrc.$$.bak"
+  yellow "Removing all rad-shell files and backing up ~/.zshrc to $zshrc_bak"
+  mv -f ~/.zshrc $zshrc_bak
+  rm -rf ~/.zgen
+  rm -rf ~/.rad-shell
+  rm -rf ~/.rad-plugins
+  green "Byebye!"
 }
 
 # Validate arguments
@@ -35,13 +48,15 @@ usage() {
 case $1 in
   plugin) plugin-cmd "$@"; shift;;
   version) version-cmd "$@";;
+  byebye) byebye-cmd "$@";;
+  help) usage "$@"; exit 0;;
   *)
     usage
     exit 1
   ;;
 esac
 
-# Implement: add / rm / list
+# Implement: add / rm / list / help / ... by this time i might as well make it a go cli...
 
 # For this, we need to change the structure of rad-shell:
 # Create a .rad-shell directory.  keep config here
