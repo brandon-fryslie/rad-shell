@@ -12,9 +12,9 @@ rad_shell_dir = "#{__dirname}/.."
 describe 'rad-shell', ->
   it 'can install rad-shell', ->
     docker_image_name = 'rad-shell-test'
-    @timeout 5 * 60 * 1000
+    @timeout 20 * 60 * 1000
 
-    cmd = "#{rad_shell_dir}/docker-image/build.sh --build-arg RAD_SHELL_BRANCH=#{process.env.RAD_SHELL_BRANCH ? 'master'}"
+    cmd = "#{rad_shell_dir}/docker-image/build.sh --no-cache --build-arg RAD_SHELL_BRANCH=#{process.env.RAD_SHELL_BRANCH ? 'master'}"
     build_proc = mexpect.spawn
       cmd: cmd
       env:
