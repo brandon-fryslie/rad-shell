@@ -1,17 +1,9 @@
-### Tests
+## rad tests
 
-#### rad-shell installation
+This directory contains some tests for rad-shell
 
-- can install correctly
+### Usage
 
-#### plugins
+Setup: `npm install`
 
-##### docker (todo)
-
-- dhost
-- dhost-zaw
-
-##### plugin-shared (todo)
-
-- rad-get-visual-editor
-- rad-get-editor
+Run tests: From this directory, run the command `npm run test`

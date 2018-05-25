@@ -12,7 +12,7 @@ commandTests:
   - name: "rad shell directory is symlink to $HOME/.zgen/brandon-fryslie/rad-shell-master"
     command: "zsh"
     args: ["-l", "-c", "ls -la $HOME/.rad-shell"]
-    expectedOutput: ["rad-shell-master -> /home/rad/.zgen/brandon-fryslie/rad-shell-master/"]
+    expectedOutput: ["/home/rad/.rad-shell -> /home/rad/.zgen/brandon-fryslie/rad-shell-master"]
 
 # can install plugin
   - name: "can install plugin"
