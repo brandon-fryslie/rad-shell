@@ -60,7 +60,7 @@ esac
 
 # For this, we need to change the structure of rad-shell:
 # Create a .rad-shell directory.  keep config here
-# ~/.zshrc will import from .rad-shell/.zgen-setup.zsh
+# ~/.zshrc will import from .rad-plugins
 # need to update dotfiles plugin to keep this working
 # need to have some sort of dependency management thing
 # I could include a static mapping for my plugins as a quick hack
