@@ -27,25 +27,6 @@ If you want to install rad-shell **without any default plugins**, use this comma
 export SKIP_DEFAULT_PLUGINS=true; curl -o- https://raw.githubusercontent.com/brandon-fryslie/rad-shell/master/install.sh | bash
 ```
 
-#### DEPRECATION WARNING for pre-alpha rad-shell users
-
-If you are a rad-shell user who recently updated and now you are missing plugins,
-the plugins were moved into the repo here: https://github.com/brandon-fryslie/rad-plugins.
-Please update your plugin configuration file accordingly.
-
-##### ~/.zgen-setup.zsh is DEPRECATED
-
-**If your rad-shell installation is using this file, please follow the instructions below**
-
-Due to a recent major refactoring, I recommend reinstalling rad-shell to get the newest
-version of the rad-shell source code.  Simply follow the installation instructions
-again, then copy any customizations from your old `~/.zshrc` (which will be renamed to `~/.zshrc.nn.bak` where 'n' is a number) file to the new
-`~/.zshrc` file generated during installation.
-
-The new rad-shell will update itself automatically whenever you run `zgen update`,
-so you won't need to do this again.  I apologize for the inconvenience.  Thanks for
-being an early user of rad-shell and helping to make it better for everyone.
-
 ## Usage
 
 ### Theme
@@ -66,12 +47,8 @@ You can configure the default theme with several environment variables:
 
 ### Zgen
 
-You can add new plugins to the `.zgen-setup.zsh` file.  Check out the plugins
-in this repo for an example of how to add a new plugin to your `.zgen-setup.zsh`
-file from a github repo.
-
-If you change your `.zgen-setup` file, you will need to run `zgen reset` so Zgen
-can regenerate the static configuration file for your plugins.
+You can add new plugins to the `.rad-plugins` file.  Check out my dotfiles repo
+for an example of how to to do this: https://github.com/brandon-fryslie/dotfiles/blob/master/dotfiles/rad-plugins
 
 Zgen will clone the plugin repos to a local directory.  To pull upstream changes,
 run `zgen update`.  Zgen will pull the latest changes in all repos
@@ -183,3 +160,22 @@ has an important bugfix with regards to module loading order.  You might see
 errors about functions not being defined if using the official Zgen repo.
 
 There is a PR open with the fix that I hope will be merged: https://github.com/tarjoilija/zgen/pull/87
+
+## DEPRECATION WARNING for pre-alpha rad-shell users
+
+If you are a rad-shell user who recently updated and now you are missing plugins,
+the plugins were moved into the repo here: https://github.com/brandon-fryslie/rad-plugins.
+Please update your plugin configuration file accordingly.
+
+##### ~/.zgen-setup.zsh is DEPRECATED
+
+**If your rad-shell installation is using this file, please follow the instructions below**
+
+Due to a recent major refactoring, I recommend reinstalling rad-shell to get the newest
+version of the rad-shell source code.  Simply follow the installation instructions
+again, then copy any customizations from your old `~/.zshrc` (which will be renamed to `~/.zshrc.nn.bak` where 'n' is a number) file to the new
+`~/.zshrc` file generated during installation.
+
+The new rad-shell will update itself automatically whenever you run `zgen update`,
+so you won't need to do this again.  I apologize for the inconvenience.  Thanks for
+being an early user of rad-shell and helping to make it better for everyone.
