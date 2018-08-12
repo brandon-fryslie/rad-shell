@@ -6,7 +6,19 @@ and [Zgen](https://github.com/tarjoilija/zgen).
 
 Compatible with Oh-My-Zsh and Prezto plugins out of the box.
 
-## Installation & Usage
+## Dependencies
+
+rad-shell was designed on MacOS, which includes all dependencies necessary to
+run shell.  On other OSs some may need to be installed.  Dependencies include:
+
+- zsh
+- git
+- perl (for some plugins)
+
+If you find another dependency, please file a GitHub issue and I will add it
+here.
+
+## Installation
 
 Set Zsh as your default shell, if necessary: `chsh -s /bin/zsh`
 
