@@ -26,8 +26,8 @@ parallel 'shelltest', ->
 
   describe 'wait_for', ->
     it 'can check stdout with a regex', ->
-      spawn_and_match 'echo hes got big muffins and shes got big muffins && read',
-        /(h[^m]+)([\w ]+?) (s.+?i[^ ])+.+?f(\w+)/
+      regex = /(h[^m]+)([\w ]+?) (s.+?i[^ ])+.+?f(\w+)/
+      spawn_and_match 'echo hes got big muffins and shes got big muffins && read', regex
       .then (matches) ->
         assert.equal matches[1], 'hes got big '
         assert.equal matches[2], 'muffins and'
@@ -35,8 +35,8 @@ parallel 'shelltest', ->
         assert.equal matches[4], 'fins'
 
     it 'can check stderr with a regex', ->
-      spawn_and_match_err '>&2 echo hes got big muffins and shes got big muffins && read',
-        /(h[^m]+)([\w ]+?) (s.+?i[^ ])+.+?f(\w+)/
+      regex = /(h[^m]+)([\w ]+?) (s.+?i[^ ])+.+?f(\w+)/
+      spawn_and_match_err '>&2 echo hes got big muffins and shes got big muffins && read', regex
       .then (matches) ->
         assert.equal matches[1], 'hes got big '
         assert.equal matches[2], 'muffins and'
