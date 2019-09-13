@@ -76,11 +76,11 @@ else
   git clone https://github.com/brandon-fryslie/zgen.git $HOME/.zgen
 fi
 
-curl --fail -o /tmp/rad-init.zsh https://raw.githubusercontent.com/brandon-fryslie/rad-shell/${RAD_BRANCH:-master}/rad-init.zsh
+# Source the rad-init file which will download all of the plugins and required files
+curl --fail -o- https://raw.githubusercontent.com/brandon-fryslie/rad-shell/${RAD_BRANCH:-master}/rad-init.zsh | zsh
 
+# After repos are downloaded, symlink rad_repo_path into ~/.rad-shell
 rad_repo_path="$HOME/.zgen/brandon-fryslie/rad-shell-master"
-# install plugin repos, then symlink the rad-shell repo into ~/.rad-shell
-zsh -c "source /tmp/rad-init.zsh"
 ln -s $rad_repo_path $HOME/.rad-shell || abort "Error: Cannot symlink rad-shell repo to ~/.rad-shell"
 
 # Check out RAD_BRANCH, if needed
