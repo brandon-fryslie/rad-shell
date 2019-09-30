@@ -14,7 +14,7 @@ abort() {
   exit 1
 }
 
-git --version 2>&1 | grep -q xcode-select && abort "Please install the macOS command line tools before installing rad-shell"
+git --version 2>&1 | grep -q xcode-select && abort "Please install git before installing rad-shell.  On macOS, you should install the command line tools"
 
 if [[ -f ~/.zshrc ]]; then
   yellow "Backing up ~/.zshrc to ~/.zshrc.$$.bak"
