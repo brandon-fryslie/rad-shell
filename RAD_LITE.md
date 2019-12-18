@@ -42,6 +42,21 @@ example:
 rad-lite install https://github.com/brandon-fryslie/rad-plugins/blob/master/git/git.plugin.zsh
 ```
 
+If the plugin is stored in a private repo or you are using GitHub Enterprise, pass the `--token <github token>` option
+so `rad-lite` can authenticate with GitHub.  If the plugin is behind authentication and you don't pass `--token`, the script will fail.
+
+**Important:** The `--token` argument must come BEFORE the `install` command in the shell command.
+
+example using `--token`:
+```
+rad-lite --token abc123 install https://github.com/my-super/awesome-private-repo/blob/master/git/git.plugin.zsh
+```
+
+this will not work:
+```
+rad-lite install https://github.com/my-super/awesome-private-repo/blob/master/git/git.plugin.zsh --token abc123
+```
+
 ### rad-lite init
 
 This command prints a shell script suitable for sourcing all the plugins in your .bashrc/.zshrc file.
