@@ -1,0 +1,197 @@
+#!/bin/bash -el
+
+# Use this to install rad-shell plugins w/o rad-shell
+
+colorize() { CODE=$1; shift; echo -e '\033[0;'$CODE'm'$*'\033[0m'; }
+bold() { echo -e "$(colorize 1 "$@")"; }
+red() { echo -e "$(colorize '1;31' "$@")"; }
+green() { echo -e "$(colorize 32 "$@")"; }
+yellow() { echo -e "$(colorize 33 "$@")"; }
+
+cleanup() {
+  local exit_code=$1
+  local previous_command=$BASH_COMMAND
+  [[ $exit_code -ne 0 ]] && [[ ! $previous_command == exit* ]] && red "INFO: Script exited with code $exit_code from command $previous_command"
+  exit $exit_code
+}
+trap 'cleanup $?' EXIT
+
+abort() {
+  red $1
+  red "Exiting..."
+  exit 1
+}
+
+# Validate arguments
+usage() {
+  yellow "usage: rad-lite [command] [args]"
+  yellow "commands:"
+  yellow "\tinstall: install the specified plugin(s)"
+  yellow "\tinit: add 'eval \"\$(rad-lite init)\"' to your .bashrc/.zshrc file to source the plugins"
+  yellow "\tlist: list the installed plugins"
+  yellow "\timplode: remove all plugins and the ~/.rad-shell-lite directory"
+  yellow "\thelp: print this message"
+}
+
+# Get the 'raw' user content url for any particular github url
+get-raw-url() {
+  repo_url=$1
+
+  # Test for GitHub.com vs GitHub Enterprise
+  if [[ $repo_url == https://github.com* ]]; then
+    # this: https://github.com/tarjoilija/zgen/blob/master/zgen.zsh#L326
+    # needs to become this: https://raw.githubusercontent.com/tarjoilija/zgen/master/zgen.zsh
+    echo $repo_url | sed -E -e 's#github.com/([^/]+)/([^/]+)/(blob)?#raw.githubusercontent.com/\1/\2#'
+  else
+    # this: https://ghe.megaleo.com/brandon-fryslie/rad-workday-plugin/blob/master/rad-workday-plugin.plugin.zsh
+    # needs to become this: https://ghe.megaleo.com/raw/brandon-fryslie/rad-workday-plugin/master/rad-workday-plugin.plugin.zsh
+    echo $repo_url | sed -E -e 's#https://([^/]+)/([^/]+)/([^/]+)/blob#https://\1/raw/\2/\3#'
+  fi
+}
+
+# Returns the local absolute path for a plugin file, derived from the file's URL
+get-plugin-dir() {
+  local plugin_dir gh_org gh_repo git_commit dir
+  local plugin_url=$1
+  local rad_lite_dir=$2
+
+  if [[ $plugin_url =~ ^https://[^/]+/([^/]+)/([^/]+)/blob/([^/]+)(/(.+))?/[^/]+$ ]]; then
+    gh_org="${BASH_REMATCH[1]}"
+    gh_repo="${BASH_REMATCH[2]}"
+    git_commit="${BASH_REMATCH[3]}"
+
+    if [[ -n "${BASH_REMATCH[4]}" ]]; then
+      dir="${BASH_REMATCH[5]}"
+    fi
+
+    plugin_dir="${rad_lite_dir}/${gh_org}/${gh_repo}/${dir}"
+
+    echo "${plugin_dir}"
+  else
+    red "ERROR: Could not extract plugin name from URL: ${plugin_url}" >"$(tty)"
+    return 1
+  fi
+}
+
+install-plugin() {
+  local plugin_url=$1
+  local rad_lite_dir=$2
+  local plugin_dir plugin_basename plugin_path raw_url
+
+  yellow "Installing plugin: ${plugin_str}"
+
+  # Get the 'raw' github URL
+  raw_url="$(get-raw-url ${plugin_url})"
+
+  # extract the plugin's 'name' and create a directory for it
+  plugin_dir="$(get-plugin-dir $plugin_url $rad_lite_dir)"
+  plugin_basename="$(basename $plugin_url)"
+  plugin_path="${plugin_dir}/${plugin_basename}"
+
+  if [[ ! -d "${plugin_dir}" ]]; then
+    yellow "Creating directory for plugin: ${plugin_dir}"
+    mkdir -p "${plugin_dir}"
+  fi
+
+  yellow "Saving plugin to: ${plugin_path}"
+
+  set +e
+  # check to see if URL exists or is behind auth
+  local status_code curl_test_cmd
+
+  if [[ -n $github_token ]]; then
+    raw_url="https://${github_token}@${raw_url#https://}"
+    yellow "Appended Github token to url: ${raw_url}"
+  fi
+
+  status_code="$(curl --fail -sS -I --write-out "%{http_code}" -o /dev/null $raw_url)"
+
+  if [[ $status_code == '404' ]]; then
+    red "ERROR: The plugin URL '${raw_url}' returned status code 404.  Please check the URL"
+    exit 1
+  fi
+
+  # switch this to using a prompt
+  if [[ $status_code == '3'?? ]]; then
+    red "ERROR: The URL '${raw_url}' tried to redirect.  If this is a private repository, please pass the --token option"
+    exit 1
+  fi
+
+  curl -sS --fail -o "${plugin_path}" $raw_url
+  if [[ $? != 0 ]]; then
+    red "ERROR: Could not download plugin from URL: ${raw_url}"
+    exit 1
+  fi
+  set -e
+
+  yellow "Downloaded plugin: ${plugin_url}"
+}
+
+# Set up the plugin directories and install plugins
+install-cmd() {
+  [[ $# == 0 ]] && { red "ERROR: Must pass a plugin file URL to 'rad-lite install'"; exit 1; }
+
+  if [[ ! -d $rad_lite_dir ]]; then
+    yellow "Creating rad-shell-lite directory: ${rad_lite_dir}"
+    mkdir -p "${rad_lite_dir}"
+  fi
+
+  for plugin_str in "${@}"; do
+    install-plugin "${plugin_str}" "${rad_lite_dir}"
+  done
+
+  green "Finished installing plugins"
+}
+
+# remove all files downloaded by rad-shell-lite
+implode-cmd() {
+  yellow "Removing all rad-shell-lite files"
+  rm -rf $rad_lite_dir
+  green "rad-shell-list has been removed!"
+}
+
+list-cmd() {
+  # List installed plugins in a format suitable for sourcing in a shell
+  find "$rad_lite_dir" -type f
+}
+
+init-cmd() {
+  # Prints a shell script that can be eval'd by other shells (e.g., in a .bashrc) like so:
+  # eval "$(rad-lite init)"
+  find "$rad_lite_dir" -type f | while read -r line; do
+    echo "source ${line}"
+  done
+}
+
+help-cmd() {
+  usage
+  exit 0
+}
+
+[[ $# == 0 ]] && { usage; exit 1; }
+
+# global variable used in multiple functions
+rad_lite_dir="$HOME/.rad-shell-lite"
+
+for i in `seq 0 $#`; do
+  case ${!i} in
+    --token)
+      val_idx=$((i+1))
+      github_token="${*:$val_idx:1}"
+      shift; shift # this will break as soon as I add more arguments here...
+  esac
+done
+
+# Parse arguments
+case $1 in
+  install) shift; install-cmd "$@";;
+  init)    shift; init-cmd "$@";;
+  list)    shift; list-cmd "$@";;
+  implode) shift; implode-cmd "$@";;
+  help)    usage "$@"; exit 0;;
+  *)
+    usage
+    exit 1
+  ;;
+esac
+
