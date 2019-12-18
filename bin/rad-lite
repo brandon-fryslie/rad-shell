@@ -152,15 +152,19 @@ implode-cmd() {
 
 list-cmd() {
   # List installed plugins in a format suitable for sourcing in a shell
-  find "$rad_lite_dir" -type f
+  if [[ -d $rad_lite_dir ]]; then
+    find "$rad_lite_dir" -type f
+  fi
 }
 
 init-cmd() {
   # Prints a shell script that can be eval'd by other shells (e.g., in a .bashrc) like so:
   # eval "$(rad-lite init)"
-  find "$rad_lite_dir" -type f | while read -r line; do
-    echo "source ${line}"
-  done
+  if [[ -d $rad_lite_dir ]]; then
+    find "$rad_lite_dir" -type f | while read -r line; do
+      echo "source ${line}"
+    done
+  fi
 }
 
 help-cmd() {
