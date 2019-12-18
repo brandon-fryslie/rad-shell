@@ -6,6 +6,13 @@ It is a small bash script that will download the plugins to a local directory.  
 then source them in your .bashrc/.zshrc file.  Note that many zsh plugins are not directly
 compatible with bash.  This solution is simpler but not as robust as using rad-shell directly.
 
+## caveats
+
+There are some important things to note with using this:
+- Not all plugins are bash/zsh agnostic.  They all work with zsh, but there may be missing or broken functionality in bash
+- There is no dependency management.  If you install a plugin that depends on a different plugin, you need to manage that yourself
+- Almost every rad-shell plugin depends on the `init-plugin` in rad-shell.  Ensure it is installed with `rad-lite install https://github.com/brandon-fryslie/rad-shell/blob/master/init-plugin/init-plugin.plugin.zsh`
+
 ## installation
 
 Run these commands to install the `rad-lite` shell script.  Feel free to inspect the
@@ -23,6 +30,8 @@ To use `rad-lite`, first install a plugin, and then add `eval "$(rad-lite init)"
 This will automatically source all plugins that have been installed with `rad-lite`.
 
 If you prefer to source the files in your .bashrc file yourself, you can use `rad-lite list` to print a list of plugin file paths.
+
+**Important:** All rad-shell plugins depend on the `init-plugin`!  Don't forget to install it with `rad-lite install https://github.com/brandon-fryslie/rad-shell/blob/master/init-plugin/init-plugin.plugin.zsh`
 
 ### rad-lite install
 
