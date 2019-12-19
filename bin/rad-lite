@@ -1,4 +1,4 @@
-#!/bin/bash -el
+#!/bin/bash -e
 
 # Use this to install rad-shell plugins w/o rad-shell
 
