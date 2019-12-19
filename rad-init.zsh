@@ -4,6 +4,10 @@ ZGEN_AUTOLOAD_COMPINIT=1
 # Automatically regenerate zgen configuration when ~/.rad-plugins changes
 ZGEN_RESET_ON_CHANGE=$HOME/.rad-plugins
 
+# Plugins can register an init hook that will be called after all plugins are loaded
+# This allows us to avoid module load order dependencies by delaying initialization until dependencies have all been loaded
+declare -a rad_plugin_init_hooks
+
 zstyle ':prezto:module:terminal' auto-title 'yes'
 zstyle ':prezto:module:terminal:window-title' format '%n@%m'
 zstyle ':prezto:module:terminal:tab-title' format '%s'
@@ -44,3 +48,7 @@ if ! zgen saved; then
 
   zgen save
 fi
+
+for init_hook in "${rad_plugin_init_hooks[@]}"; do
+  $init_hook
+done
