@@ -50,5 +50,6 @@ if ! zgen saved; then
 fi
 
 for init_hook in "${rad_plugin_init_hooks[@]}"; do
-  $init_hook
+  # Pass the script path to the init hook
+  ${init_hook%%:*} ${init_hook##*:}
 done

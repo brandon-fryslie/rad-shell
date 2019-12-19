@@ -159,9 +159,18 @@ init-cmd() {
   # Prints a shell script that can be eval'd by other shells (e.g., in a .bashrc) like so:
   # eval "$(rad-lite init)"
   if [[ -d $rad_lite_plugins_dir ]]; then
+    # Declare init hooks array
+    echo "declare -a rad_plugin_init_hooks"
+
+    # Source plugins and add init hooks
     find "$rad_lite_plugins_dir" -type f | while read -r line; do
       echo "source ${line}"
     done
+
+    # Run all init hooks
+    echo 'for init_hook in "${rad_plugin_init_hooks[@]}"; do'
+    echo '   ${init_hook%%:*} ${init_hook##*:}'
+    echo 'done'
   fi
 }
 
