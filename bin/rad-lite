@@ -53,7 +53,6 @@ get-raw-url() {
 get-plugin-dir() {
   local plugin_dir gh_org gh_repo git_commit dir
   local plugin_url=$1
-  local rad_lite_dir=$2
 
   if [[ $plugin_url =~ ^https://[^/]+/([^/]+)/([^/]+)/blob/([^/]+)(/(.+))?/[^/]+$ ]]; then
     gh_org="${BASH_REMATCH[1]}"
@@ -64,7 +63,7 @@ get-plugin-dir() {
       dir="${BASH_REMATCH[5]}"
     fi
 
-    plugin_dir="${rad_lite_dir}/${gh_org}/${gh_repo}/${dir}"
+    plugin_dir="${rad_lite_plugins_dir}/${gh_org}/${gh_repo}/${dir}"
 
     echo "${plugin_dir}"
   else
@@ -75,7 +74,6 @@ get-plugin-dir() {
 
 install-plugin() {
   local plugin_url=$1
-  local rad_lite_dir=$2
   local plugin_dir plugin_basename plugin_path raw_url
 
   yellow "Installing plugin: ${plugin_str}"
@@ -84,7 +82,7 @@ install-plugin() {
   raw_url="$(get-raw-url ${plugin_url})"
 
   # extract the plugin's 'name' and create a directory for it
-  plugin_dir="$(get-plugin-dir $plugin_url $rad_lite_dir)"
+  plugin_dir="$(get-plugin-dir $plugin_url)"
   plugin_basename="$(basename $plugin_url)"
   plugin_path="${plugin_dir}/${plugin_basename}"
 
@@ -131,13 +129,13 @@ install-plugin() {
 install-cmd() {
   [[ $# == 0 ]] && { red "ERROR: Must pass a plugin file URL to 'rad-lite install'"; exit 1; }
 
-  if [[ ! -d $rad_lite_dir ]]; then
-    yellow "Creating rad-shell-lite directory: ${rad_lite_dir}"
-    mkdir -p "${rad_lite_dir}"
+  if [[ ! -d $rad_lite_plugins_dir ]]; then
+    yellow "Creating rad-shell-lite plugins directory: ${rad_lite_plugins_dir}"
+    mkdir -p "${rad_lite_plugins_dir}"
   fi
 
   for plugin_str in "${@}"; do
-    install-plugin "${plugin_str}" "${rad_lite_dir}"
+    install-plugin "${plugin_str}"
   done
 
   green "Finished installing plugins"
@@ -152,16 +150,16 @@ implode-cmd() {
 
 list-cmd() {
   # List installed plugins in a format suitable for sourcing in a shell
-  if [[ -d $rad_lite_dir ]]; then
-    find "$rad_lite_dir" -type f
+  if [[ -d $rad_lite_plugins_dir ]]; then
+    find "$rad_lite_plugins_dir" -type f
   fi
 }
 
 init-cmd() {
   # Prints a shell script that can be eval'd by other shells (e.g., in a .bashrc) like so:
   # eval "$(rad-lite init)"
-  if [[ -d $rad_lite_dir ]]; then
-    find "$rad_lite_dir" -type f | while read -r line; do
+  if [[ -d $rad_lite_plugins_dir ]]; then
+    find "$rad_lite_plugins_dir" -type f | while read -r line; do
       echo "source ${line}"
     done
   fi
@@ -176,6 +174,7 @@ help-cmd() {
 
 # global variable used in multiple functions
 rad_lite_dir="$HOME/.rad-shell-lite"
+rad_lite_plugins_dir="$rad_lite_dir/plugins"
 
 for i in `seq 0 $#`; do
   case ${!i} in
