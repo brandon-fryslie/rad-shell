@@ -54,8 +54,9 @@ get-plugin-dir() {
 
 # This needs to return a 'git://' repo path so we use the users ssh credentials
 get-repo-path() {
-  local plugin_dir gh_org gh_repo git_commit dir gh_domain
-  local plugin_url=$1
+  local plugin_dir gh_org gh_repo git_commit gh_domain clone_via_ssh plugin_url
+  clone_via_ssh=$1
+  plugin_url=$2
 
   if [[ "${plugin_url}" =~ ^https://([^/]+)/([^/]+)/([^/]+)/blob/([^/]+)(/(.+))?/[^/]+$ ]]; then
     gh_domain="${BASH_REMATCH[1]}"
@@ -65,7 +66,11 @@ get-repo-path() {
 
     # git@ghe.megaleo.com:brandon-fryslie/rad-workday-plugin.git
 
-    echo "git@${gh_domain}:${gh_org}/${gh_repo}.git"
+    if [[ "${clone_via_ssh}" == 'true' ]]; then
+      echo "git@${gh_domain}:${gh_org}/${gh_repo}.git"
+    else
+      echo "https://${gh_domain}/${gh_org}/${gh_repo}.git"
+    fi
   else
     red "ERROR: Could not extract repo path from URL: ${plugin_url}" >"$(tty)"
     return 1
@@ -96,8 +101,9 @@ get-plugin-relative-path() {
 }
 
 install-plugin() {
-  local plugin_url=$1
-  local plugin_dir plugin_relative_path
+  local plugin_dir plugin_relative_path repo_path
+  local clone_via_ssh=$1
+  local plugin_url=$2
 
   yellow "Installing plugin: ${plugin_str}"
 
@@ -109,7 +115,9 @@ install-plugin() {
     yellow "Creating directory for plugin: ${plugin_dir}"
     mkdir -p "${plugin_dir}"
 
-    git clone --depth=1 --recursive -b "$(get-plugin-branch "${plugin_url}")" "$(get-repo-path "${plugin_url}")" "${plugin_dir}" 1>/dev/null
+    repo_path="$(get-repo-path "${clone_via_ssh}" "${plugin_url}")"
+
+    git clone --depth=1 --recursive -b "$(get-plugin-branch "${plugin_url}")" "${repo_path}" "${plugin_dir}" 1>/dev/null
   fi
 
   # Write an entry to the manifest file
@@ -127,6 +135,9 @@ install-plugin() {
 
 # Set up the plugin directories and install plugins
 install-cmd() {
+  local clone_via_ssh=$1
+  shift
+
   [[ $# == 0 ]] && { red "ERROR: Must pass a plugin file URL to 'rad-lite install'"; exit 1; }
 
   if [[ ! -d "${rad_lite_plugins_dir}" ]]; then
@@ -135,7 +146,7 @@ install-cmd() {
   fi
 
   for plugin_str in "${@}"; do
-    install-plugin "${plugin_str}"
+    install-plugin "${clone_via_ssh}" "${plugin_str}"
   done
 
   green "Finished installing plugins"
@@ -181,22 +192,29 @@ help-cmd() {
 
 [[ $# == 0 ]] && { usage; exit 1; }
 
-# global variable used in multiple functions
-rad_lite_dir="$HOME/.rad-shell-lite"
-rad_lite_plugins_dir="$rad_lite_dir/plugins"
 
-# The manifest is just a list of installed plugin urls
+## Global variables used in multiple functions
+# rad-lite installation directory
+rad_lite_dir="$HOME/.rad-shell-lite"
+# rad-lite plugins directory
+rad_lite_plugins_dir="$rad_lite_dir/plugins"
+# Manifest file.  contains a list of install plugin files
 rad_lite_manifest="${rad_lite_dir}/manifest"
 
-# Parse arguments
-case $1 in
-  install) shift; install-cmd "$@";;
-  init)    shift; init-cmd "$@";;
-  list)    shift; list-cmd "$@";;
-  implode) shift; implode-cmd "$@";;
-  help)    usage "$@"; exit 0;;
-  *)
-    usage
-    exit 1
-  ;;
-esac
+
+## Parse cli arguments
+declare -a plugin_urls
+clone_via_ssh='false'
+command='help'
+
+while [[ $# -gt 0 ]]; do
+  key="$1"
+
+  case $key in
+    install|init|list|implode|help) command="$key"; shift;;
+    --private|--ssh) clone_via_ssh="true"; shift;;
+    *) plugin_urls+=("${key}"); shift;;
+  esac
+done
+
+"${command}-cmd" "${clone_via_ssh}" "${plugin_urls[*]}"
