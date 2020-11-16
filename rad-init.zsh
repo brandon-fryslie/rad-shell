@@ -35,6 +35,11 @@ if ! zgen saved; then
   # Initializes some functionality baked into rad-shell
   zgen load brandon-fryslie/rad-shell init-plugin
 
+  # Initialize oh-my-zsh libraries required to use oh-my-zsh themes
+  zgen load ohmyzsh/ohmyzsh lib/git.zsh
+  zgen load ohmyzsh/ohmyzsh lib/prompt_info_functions.zsh
+  zgen load ohmyzsh/ohmyzsh lib/theme-and-appearance.zsh
+
   # Here is where we load plugins from $HOME/.rad-plugins
   while read -r line; do
     if [[ ! $line =~ '^#' ]] && [[ ! $line == '' ]]; then

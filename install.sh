@@ -42,7 +42,7 @@ brandon-fryslie/rad-plugins homebrew
 brandon-fryslie/rad-plugins dotfiles
 
 # 3rd Party plugins
-robbyrussell/oh-my-zsh plugins/docker
+ohmyzsh/ohmyzsh plugins/docker
 
 # Enhanced fork of zaw
 brandon-fryslie/zaw
@@ -55,13 +55,21 @@ brandon-fryslie/rad-plugins git
 brandon-fryslie/rad-plugins shell-tools
 brandon-fryslie/rad-plugins rad-dev
 
+### Themes
+### Add themes here.  We use git-taculous by default.  You can also use most oh-my-zsh themes or a custom theme
+### Remove or comment out the default theme if you want to use a different them
+brandon-fryslie/rad-plugins git-taculous-theme/git-taculous
+
+# oh-my-zsh theme example (https://github.com/ohmyzsh/ohmyzsh/wiki/Themes)
+# ohmyzsh/ohmyzsh themes/amuse
+
+# Custom theme example
+# caiogondim/bullet-train-oh-my-zsh-theme bullet-train
+### / Themes
+
 # Load these last
 brandon-fryslie/zsh-syntax-highlighting
 brandon-fryslie/rad-plugins shell-customize
-
-# The theme should always be loaded last
-Remove this if you don't want to use the default theme and want to specify your own
-brandon-fryslie/rad-plugins git-taculous-theme/git-taculous
 EOSCRIPT
 }
 

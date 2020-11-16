@@ -53,6 +53,12 @@ export SKIP_DEFAULT_PLUGINS=true; curl -o- https://raw.githubusercontent.com/bra
 
 ### Theme
 
+#### default theme: `git-taculous`
+
+This is the standard theme included with rad-shell.  It can be disabled by
+removing the line `brandon-fryslie/rad-plugins git-taculous-theme/git-taculous`
+from your `~/.rad-plugins` file.
+
 You can configure the default theme with several environment variables:
 
 `ENABLE_DOCKER_PROMPT=true`
@@ -66,6 +72,15 @@ You can configure the default theme with several environment variables:
 `ENABLE_NODE_PROMPT=true`
 - show nodejs and npm versions in your prompt
 - this will load NVM right away, adding significant time to your shell's startup time
+
+#### other themes
+
+You can use other themes that are compatible with oh-my-zsh.  Here are some: https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+
+To use one of those, add it to your ~/.rad-plugins file the same as any other plugin.
+
+Most oh-my-zsh themes work correctly, but not all of them do for whatever reason.  This is a bug (or bugs)
+and might get fixed some day.  We most likely just need to include more `libs` from the `oh-my-zsh` repo.
 
 ### Zgen
 
