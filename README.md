@@ -6,6 +6,16 @@ and [Zgen](https://github.com/tarjoilija/zgen).
 
 Compatible with Oh-My-Zsh and Prezto plugins out of the box.
 
+## Update: Potentially breaking change
+
+rad-shell does not automatically load the `git-taculous` theme by default anymore,
+allowing you to customize the theme for your own setup.  After updating, the theme will no
+longer be loaded automatically (but will be included as one of the default plugins
+upon installation).  To add the standard theme to your ~/.rad-plugins file, run:
+```
+echo 'brandon-fryslie/rad-plugins git-taculous-theme/git-taculous' >> ~/.rad-plugins
+```
+
 ## Dependencies
 
 rad-shell was designed on MacOS, which includes all dependencies necessary to

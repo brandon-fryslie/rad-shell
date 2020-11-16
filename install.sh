@@ -58,6 +58,10 @@ brandon-fryslie/rad-plugins rad-dev
 # Load these last
 brandon-fryslie/zsh-syntax-highlighting
 brandon-fryslie/rad-plugins shell-customize
+
+# The theme should always be loaded last
+Remove this if you don't want to use the default theme and want to specify your own
+brandon-fryslie/rad-plugins git-taculous-theme/git-taculous
 EOSCRIPT
 }
 

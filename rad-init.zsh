@@ -43,9 +43,6 @@ if ! zgen saved; then
     fi
   done < $HOME/.rad-plugins
 
-  # Theme
-  zgen load brandon-fryslie/rad-plugins git-taculous-theme/git-taculous
-
   zgen save
 fi
 
