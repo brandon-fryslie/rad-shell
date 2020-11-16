@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 RUN apt-get update \
   && apt-get install -y build-essential curl zsh git \
-  && useradd --create-home --shell /bin/zsh --groups sudo rad
+  && useradd --create-home --shell /usr/bin/zsh --groups sudo rad
 
 RUN apt-get install -y sudo docker.io
 
@@ -24,3 +24,5 @@ ARG RAD_SHELL_BRANCH=master
 RUN cd /home/rad/.zgen/brandon-fryslie/rad-shell-master \
   && git pull \
   && git checkout $RAD_SHELL_BRANCH
+
+ENTRYPOINT ["/usr/bin/zsh"]
