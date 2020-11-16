@@ -69,8 +69,8 @@ You can configure the default theme with several environment variables:
 
 ### Zgen
 
-You can add new plugins to the `.rad-plugins` file.  Check out my dotfiles repo
-for an example of how to to do this: https://github.com/brandon-fryslie/dotfiles/blob/master/dotfiles/rad-plugins
+You can add new plugins to the `~/.rad-plugins` file.  Check out my dotfiles repo
+for an example of how to do this: https://github.com/brandon-fryslie/dotfiles/blob/master/dotfiles/rad-plugins
 
 Zgen will clone the plugin repos to a local directory.  To pull upstream changes,
 run `zgen update`.  Zgen will pull the latest changes in all repos
