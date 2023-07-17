@@ -6,42 +6,36 @@ and [Zgen](https://github.com/tarjoilija/zgen).
 
 Compatible with Oh-My-Zsh and Prezto plugins out of the box.
 
-## Update: Potentially breaking change
-
-rad-shell does not automatically load the `git-taculous` theme by default anymore,
-allowing you to customize the theme for your own setup.  After updating, the theme will no
-longer be loaded automatically (but will be included as one of the default plugins
-upon installation).  To add the standard theme to your ~/.rad-plugins file, run:
-```
-echo 'brandon-fryslie/rad-plugins git-taculous-theme/git-taculous' >> ~/.rad-plugins
-```
-
 ## Dependencies
 
-rad-shell was designed on MacOS, which includes all dependencies necessary to
-run shell.  On other OSs some may need to be installed.  Dependencies include:
-
+The only hard dependencies are:
 - zsh
 - git
-- perl (for some plugins)
+
+Some plugins depend on:
+- perl
 
 If you find another dependency, please file a GitHub issue and I will add it
 here.
 
-## Installation
+## Installation / Uninstallation
 
 Set Zsh as your default shell, if necessary: `chsh -s /bin/zsh`
+
+### Install with default plugins (quickstart)
 
 ```sh
 curl -o- https://raw.githubusercontent.com/brandon-fryslie/rad-shell/master/install.sh | bash
 ```
 
 This script:
-- Backs up any existing ~/.zshrc!
-- Writes a shiny new ~/.zshrc file!
-- Writes a ~/.rad-plugins file to keep track of your rad plugins!
-- Clones Zgen!
-- Clones the plugin repos and configures your new rad shell!
+- Backs up any existing ~/.zshrc
+- Writes a shiny new ~/.zshrc file
+- Writes a ~/.rad-plugins file to keep track of your rad plugins
+- Configures Zgen
+- Automatically initializes plugins
+
+### Install without default plugins
 
 If you want to install rad-shell **without any default plugins**, use this command:
 
@@ -49,7 +43,77 @@ If you want to install rad-shell **without any default plugins**, use this comma
 export SKIP_DEFAULT_PLUGINS=true; curl -o- https://raw.githubusercontent.com/brandon-fryslie/rad-shell/master/install.sh | bash
 ```
 
+### Existing oh-my-zsh (or other zsh) installation
+
+If you're already using zsh or oh-my-zsh, follow these steps: 
+
+- Run standard installation instructions
+- Copy any functions, environment variables, or other customizations from your old ~/.zshrc file (rad-shell creates a backup on install)
+  - Do not copy oh-my-zsh plugins (e.g., the `plugins=(...)` list) or other code to load zsh plugins.  rad-shell handles this via the `~/.rad-plugins` file
+- Add any zsh plugins you want to load to ~/.rad-plugins
+  - You can load plugins from any `git` repo
+  - For example, to load a `oh-my-zsh` plugin add this to your ~/.rad-plugins file: `ohmyzsh/ohmyzsh plugins/kubectx`
+  - Any change to the ``
+- You can add any zsh plugins from any git repo, not only oh-my-zsh
+
+Note: `rad-shell` replaces some basic `oh-my-zsh` plugins with `prezto`.  `prezto` is optimized for speed.  You can still load
+any standard `oh-my-zsh` plugins, but `rad-shell` automatically loads the base functionality required for other plugins to 
+work correctly.
+
+The base plugins loaded are: `environment terminal editor history directory spectrum utility completion prompt`
+
+### Restore your old shell configuration
+
+If you decide you don't want to use `rad-shell`, simply replace your ~/.zshrc file with the backup made during `rad-shell`
+installation.
+
+### Adding/removing plugins
+
+Plugins are added or removed by modifying the `~/.rad-plugins` file.  Any change to this file will cause the plugins to
+reinitialized when a new terminal window is opened or by running `source ~/.zshrc`.
+
+Plugins in the file follow this format:
+```
+# The generalized format is this:
+github-repo-or-org/repo-name path/to/zsh/plugin
+
+# Load a standard oh-my-zsh plugin
+# Translates to url: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker
+ohmyzsh/ohmyzsh plugins/docker
+
+# Custom plugins in root directory
+# Tranlates to url: https://github.com/brandon-fryslie/rad-plugins/tree/master/docker
+brandon-fryslie/rad-plugins docker
+```
+
+The lines in this file are passed directly to `zgen load`.  Anything supported by the `zgen load` command is supported 
+here.  This means you can load plugins from any `git` url, including non-public sources (e.g., internal GitHub Enterprise).
+
+Docs: https://github.com/tarjoilija/zgen#load-plugins-and-completions
+
+### Update plugins
+
+To update your plugins, run `zgen update`.  `zgen` handles updating all plugin repos via git.
+
+### Removing `rad-shell`
+
+If you want to remove `rad-shell` entirely, remove the following files/directories:
+
+- `rm -rf ~/.rad-plugins ~/.rad-shell ~/.zgen`
+  - This removes all `rad-shell` and `zgen` files
+- `mv ~/.zshrc ~/.zshrc.rad-shell.bak`
+  - Back up the `~/.zshrc` file so you can grab any customizations later
+- `cp /path/to/backup/zshrc ~/.zshrc`
+  - Use this if you have an existing `.zshrc` file you want to restore
+- `touch ~/.zshrc`
+  - Use this if you want to create an empty `~/.zshrc` file and start from scratch
+
+Removing the `rad-shell` and `zgen` files is not necessary to stop using `rad-shell`.  Removing or commenting out the line
+`source $HOME/.rad-shell/rad-init.zsh` in your ~/.zshrc file will accomplish this.
+
 ## Usage
+
+Note: most of this functionality comes from the rad-shell plugins repo: https://github.com/brandon-fryslie/rad-plugins
 
 ### Theme
 
