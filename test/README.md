@@ -1,9 +1,5 @@
-## rad tests
+# rad tests
 
-This directory contains some tests for rad-shell
+This directory should contain some tests for rad-shell
 
-### Usage
-
-Setup: `npm install`
-
-Run tests: From this directory, run the command `npm run test`
+Currently removed for re-implementation in something with less external dependencies
