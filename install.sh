@@ -9,12 +9,86 @@ green() { echo -e "$(colorize 32 "$@")"; }
 yellow() { echo -e "$(colorize 33 "$@")"; }
 
 abort() {
+<<<<<<< HEAD
   red "$1"
   red "Exiting..."
+=======
+  red $1
+>>>>>>> c863ba4 (refactor install wip)
   exit 1
 }
 
-git --version 2>&1 | grep -q xcode-select && abort "Please install git before installing rad-shell.  On macOS, you should install the command line tools"
+detect_os_type() {
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+      # This is macOS
+      echo "MacOS"
+  elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+      # This is Linux
+      echo "Linux"
+  elif [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" ]]; then
+      # This is Windows (Cygwin or MSYS/MinGW)
+      echo "Windows"
+  else
+      # Unsupported OS or unable to determine OS
+      red "ERROR: My apologoies, we couldn't determine your operating system :("
+      red "ERROR: I would so much appreciate it if you could file an issue here: https://github.com/brandon-fryslie/rad-shell/issues"
+      red "ERROR: or let me know in some way.  Please include the following information:"
+      red "ERROR: \$OSTYPE variable was '$OSTYPE'"
+  fi
+}
+
+prompt_yes_no() {
+  local prompt=$1
+  local cmdYes=$2
+  local cmdNo=$3
+  local response
+
+  while true; do
+    read -r -p "${prompt}" response
+
+    if [[ "$response" =~ ^[Yy]$ ]]; then
+      eval "$cmdYes"
+      return 0
+    elif [[ "$response" =~ ^[Nn]$ ]]; then
+      eval "$cmdNo"
+      return 0
+    else
+      yellow "Please enter 'y' or 'n', or ctrl+c to exit"
+    fi
+  done
+}
+
+
+install-macos() {
+  yellow "Checking for git..."
+  if git --version 2>&1 | grep -q xcode-select || ! command -v "git" >/dev/null 2>&1; then
+    prompt_yes_no "Please install the MacOS Command Line Tools.  Would you like to install them now? (y/n): "\
+      "xcode-select --install" \
+      "abort 'Cannot continue without git, goodbye'"
+  else
+    green "git found"
+  fi
+
+
+}
+
+
+install-linux() {
+  yellow "Checking for git..."
+  command -v "git" >/dev/null 2>&1 || abort "Please install git before installing rad-shell.  Use your system package manager or any preferred source"
+}
+
+############ main ############
+
+os_name="$(detect_os_type)"
+
+# There's a few MacOS specific things, but treat Windows like Linux
+if [[ $os_name == "MacOS"]]; then
+  install-macos
+else
+  install-linux
+fi
+exit 0
 
 if [[ -f ~/.zshrc ]]; then
   yellow "Backing up ~/.zshrc to ~/.zshrc.$$.bak"
