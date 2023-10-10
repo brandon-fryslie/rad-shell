@@ -1,4 +1,6 @@
-#!/bin/bash -e
+#!/bin/zsh
+
+set -eu
 
 # Use this to install rad-shell plugins w/o rad-shell
 
@@ -37,6 +39,10 @@ usage() {
 get-plugin-dir() {
   local plugin_dir gh_org gh_repo git_commit dir
   local plugin_url=$1
+
+  if [[ -z $plugin_url ]]; then
+    rad-red "ERROR: Must pass in plugin url"
+  fi
 
   if [[ "${plugin_url}" =~ ^https://[^/]+/([^/]+)/([^/]+)/blob/([^/]+)(/(.+))?/[^/]+$ ]]; then
     gh_org="${BASH_REMATCH[1]}"
