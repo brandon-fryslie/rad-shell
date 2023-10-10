@@ -46,14 +46,9 @@ usage() {
 
 # Parse arguments
 case $1 in
-  plugin) plugin-cmd "$@"; shift;;
-  version) version-cmd "$@";;
-  byebye) byebye-cmd "$@";;
+  implode|plugin|version) ${1}-cmd "$@"; shift;;
   help) usage "$@"; exit 0;;
-  *)
-    usage
-    exit 1
-  ;;
+  *) usage; exit 1 ;;
 esac
 
 # Implement: add / rm / list / help / ... by this time i might as well make it a go cli...
