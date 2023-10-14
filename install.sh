@@ -22,8 +22,8 @@ if [[ -f ~/.zshrc ]]; then
 fi
 
 yellow "Writing $HOME/.zshrc"
-touch $HOME/.zshrc
-cat <<-EOSCRIPT > $HOME/.zshrc
+touch "$HOME/.zshrc"
+cat <<-EOSCRIPT > "$HOME/.zshrc"
 # Initialize rad-shell and plugins
 source $HOME/.rad-shell/rad-init.zsh
 
@@ -34,7 +34,7 @@ EOSCRIPT
 rad_plugins_file="$HOME/.rad-plugins"
 
 write-default-plugins-file() {
-  cat <<-EOSCRIPT > $rad_plugins_file
+  cat <<-EOSCRIPT > "$rad_plugins_file"
 # Load Homebrew near the top
 brandon-fryslie/rad-plugins homebrew
 
@@ -75,7 +75,7 @@ EOSCRIPT
 
 if [[ ${SKIP_DEFAULT_PLUGINS:-false} == true ]]; then
   yellow "Skipping install of default plugins.  Creating empty $rad_plugins_file"
-  touch $rad_plugins_file
+  touch "$rad_plugins_file"
 else
   yellow "Writing $rad_plugins_file with default plugins"
   write-default-plugins-file
@@ -85,21 +85,21 @@ if [[ -d $HOME/.zgen ]]; then
   yellow "Zgen is already cloned.  Skipping clone"
 else
   yellow "Cloning Zgen into $HOME/.zgen"
-  git clone https://github.com/brandon-fryslie/zgen.git $HOME/.zgen
+  git clone https://github.com/brandon-fryslie/zgen.git "$HOME/.zgen"
 fi
 
-curl --fail -o /tmp/rad-init.zsh https://raw.githubusercontent.com/brandon-fryslie/rad-shell/${RAD_BRANCH:-master}/rad-init.zsh
+curl --fail -o /tmp/rad-init.zsh "https://raw.githubusercontent.com/brandon-fryslie/rad-shell/${RAD_BRANCH:-master}/rad-init.zsh"
 
 rad_repo_path="$HOME/.zgen/brandon-fryslie/rad-shell-master"
 # install plugin repos, then symlink the rad-shell repo into ~/.rad-shell
 zsh -c "source /tmp/rad-init.zsh"
-ln -s $rad_repo_path $HOME/.rad-shell || abort "Error: Cannot symlink rad-shell repo to ~/.rad-shell"
+ln -s "$rad_repo_path" "$HOME/.rad-shell" || abort "Error: Cannot symlink rad-shell repo to ~/.rad-shell"
 
 # Check out RAD_BRANCH, if needed
 if [[ -n $RAD_BRANCH ]]; then
-  git -C $rad_repo_path config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
-  git -C $rad_repo_path fetch
-  git -C $rad_repo_path checkout $RAD_BRANCH
+  git -C "$rad_repo_path" config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+  git -C "$rad_repo_path" fetch
+  git -C "$rad_repo_path" checkout "$RAD_BRANCH"
 fi
 
 green "Done!  Open a new shell."
