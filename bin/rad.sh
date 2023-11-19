@@ -4,7 +4,7 @@
 
 set -e
 
-colorize() { CODE=$1; shift; echo -e '\033[0;'$CODE'm'$*'\033[0m'; }
+colorize() { CODE=$1; shift; echo -e '\033[0;'"${CODE}m$*"'\033[0m'; }
 bold() { echo -e "$(colorize 1 "$@")"; }
 red() { echo -e "$(colorize '1;31' "$@")"; }
 green() { echo -e "$(colorize 32 "$@")"; }

@@ -46,7 +46,7 @@ if ! zgen saved; then
       echo "Loading plugin: $line"
       eval "zgen load $line"
     fi
-  done < $HOME/.rad-plugins
+  done < "$HOME/.rad-plugins"
 
   zgen save
 fi
