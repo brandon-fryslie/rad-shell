@@ -86,13 +86,24 @@ rad-realpath() {
 # Add a directory to the path only if it's not already there
 rad-addpath() {
   local new_path=$1
-  # Check if the new path is already in $PATH
-  if [[ ! ":$PATH:" == *":$new_path:"* ]]; then
-    export PATH="$PATH:$new_path"
+
+  # Check if the new path is provided
+  if [[ -z "$new_path" ]]; then
+    echo "Usage: rad-addpath <path>"
+    return 1
   fi
-  export PATH="$PATH:$RAD_SHELL_DIR/bin"
+
+  # Check if the new path is already in $PATH
+  if [[ ":$PATH:" != *":$new_path:"* ]]; then
+    export PATH="$new_path:$PATH"
+  fi
 }
 
 # Make rad-shell bins available to path
 export RAD_SHELL_DIR="$(rad-realpath "${0:a:h}/..")"
-rad-addpath $RAD_SHELL_DIR
+rad-addpath "${RAD_SHELL_DIR}/bin"
+
+# Ensure ZSH_CACHE_DIR & ZSH_COMPLETIONS_DIR are setup
+export ZSH_CACHE_DIR="$HOME/.cache/zsh"
+export ZSH_COMPLETIONS_DIR="${ZSH_CACHE_DIR}/completions"
+mkdir -p "${ZSH_COMPLETIONS_DIR}"
