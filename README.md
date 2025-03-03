@@ -111,6 +111,18 @@ If you want to remove `rad-shell` entirely, remove the following files/directori
 Removing the `rad-shell` and `zgen` files is not necessary to stop using `rad-shell`.  Removing or commenting out the line
 `source $HOME/.rad-shell/rad-init.zsh` in your ~/.zshrc file will accomplish this.
 
+## Running Tests
+
+To run the tests for the rad-shell scripts, you need to have [ShellSpec](https://github.com/shellspec/shellspec) installed. Once installed, you can execute the tests by navigating to the directory containing the test files and running:
+
+```sh
+shellspec
+```
+
+This command will execute all the test files with the `.bats` extension in the `tests` directory and display the results in your terminal.
+
+Ensure that each test file is properly set up to source the script it is testing and contains the necessary test cases.
+
 ## Usage
 
 Note: most of this functionality comes from the rad-shell plugins repo: https://github.com/brandon-fryslie/rad-plugins

@@ -1,6 +1,15 @@
 # These are some functions to be shared among rad plugins
 # Functions will be prefixed with 'rad-' to avoid any conflicts
 
+
+rad-import-local() {
+  # Ignore if we're not in zsh
+  if [[ -n "$ZSH_VERSION" ]]; then
+    local filename="$1"
+    [[ -f "${0:a:h}/${filename}" ]] && source "${0:a:h}/${filename}"
+  fi
+}
+
 rad-get-visual-editor() {
   echo "${VISUAL:-${EDITOR:-vi}}"
 }
@@ -99,6 +108,9 @@ rad-addpath() {
   fi
 }
 
+# Import local module
+rad-import-local rad-shell-kv-store.zsh
+
 # Make rad-shell bins available to path
 export RAD_SHELL_DIR="$(rad-realpath "${0:a:h}/..")"
 rad-addpath "${RAD_SHELL_DIR}/bin"
@@ -107,3 +119,4 @@ rad-addpath "${RAD_SHELL_DIR}/bin"
 export ZSH_CACHE_DIR="$HOME/.cache/zsh"
 export ZSH_COMPLETIONS_DIR="${ZSH_CACHE_DIR}/completions"
 mkdir -p "${ZSH_COMPLETIONS_DIR}"
+
