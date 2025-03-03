@@ -2,11 +2,18 @@
 # Functions will be prefixed with 'rad-' to avoid any conflicts
 
 
+rad-get-caller-path() {
+  local source_file
+  for source_file in "${funcsourcetrace[@]}"; do
+    [[ "$source_file" != *"rad-get-caller-path"* ]] && echo "${source_file:h}" && return
+  done
+}
+
 rad-import-local() {
   # Ignore if we're not in zsh
   if [[ -n "$ZSH_VERSION" ]]; then
     local filename="$1"
-    [[ -f "${0:a:h}/${filename}" ]] && source "${0:a:h}/${filename}"
+    source "$(rad-get-caller-path)/${filename}"
   fi
 }
 
