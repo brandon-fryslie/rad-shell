@@ -1,13 +1,8 @@
 # These are some functions to be shared among rad plugins
 # Functions will be prefixed with 'rad-' to avoid any conflicts
 
-rad-get-visual-editor() {
-  echo "${VISUAL:-${EDITOR:-vi}}"
-}
-
-rad-get-editor() {
-  echo "${EDITOR:-vi}"
-}
+### rad-zstyle ###
+####################
 
 # rad zstyle functions
 rad-zstyle-set() {
@@ -26,6 +21,10 @@ rad-zstyle-test() {
   zstyle -t ":radsh:${context}:" "${style}"
 }
 # / rad zstyle functions
+
+
+### rad-colorize ###
+####################
 
 # colorize zsh text.  allows arbitrary values (foreground, background, bold/underline/etc)
 # not fully working with all styles, but works with bold (mostly)
@@ -65,6 +64,10 @@ rad-warning()  { echo -e "$(rad-colorize 33 "" 4  "$@")"; }
 rad-serious()  { echo -e "$(rad-colorize 33 "" 4  "$@")"; }
 rad-critical() { echo -e "$(rad-colorize 31 "" 7  "$@")"; }
 
+
+### rad utility fns ###
+#######################
+
 # Cross-platform get path
 rad-realpath() {
   local f base dir
@@ -99,9 +102,40 @@ rad-addpath() {
   fi
 }
 
+function rad-addfpath() {
+    local completion_path="${1}"
+
+    # Add the directory to fpath array if not present
+    if [[ ! "${fpath[@]}" =~ ${completion_path} ]]; then
+        fpath=("${completion_path}" $fpath)
+    fi
+}
+
+
+rad-get-visual-editor() {
+  echo "${VISUAL:-${EDITOR:-vi}}"
+}
+
+rad-get-editor() {
+  echo "${EDITOR:-vi}"
+}
+
+
+### rad-shell dependency loader and validator ###
+#################################################
+source "$(dirname "$0")/zsh_deps_main.sh"
+
+
+### rad-shell bin path configuration ###
+########################################
+
 # Make rad-shell bins available to path
 export RAD_SHELL_DIR="$(rad-realpath "${0:a:h}/..")"
 rad-addpath "${RAD_SHELL_DIR}/bin"
+
+
+### set zsh completion cache dir ###
+####################################
 
 # Ensure ZSH_CACHE_DIR & ZSH_COMPLETIONS_DIR are setup
 export ZSH_CACHE_DIR="$HOME/.cache/zsh"
