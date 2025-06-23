@@ -103,4 +103,4 @@ if [[ -n $RAD_BRANCH ]]; then
   git -C "$rad_repo_path" checkout "$RAD_BRANCH"
 fi
 
-green "Done!  Open a new shell."
+green "Done!"

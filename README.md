@@ -25,7 +25,7 @@ Set Zsh as your default shell, if necessary: `chsh -s /bin/zsh`
 ### Install with default plugins (quickstart)
 
 ```sh
-curl -o- https://raw.githubusercontent.com/brandon-fryslie/rad-shell/master/install.sh | bash
+curl -o- https://raw.githubusercontent.com/brandon-fryslie/rad-shell/master/install.sh | bash; . ~/.zshrc
 ```
 
 This script:
