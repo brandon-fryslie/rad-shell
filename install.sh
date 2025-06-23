@@ -81,16 +81,17 @@ else
   write-default-plugins-file
 fi
 
-if [[ -d $HOME/.zgen ]]; then
-  yellow "Zgen is already cloned.  Skipping clone"
+zgenom_dir="${HOME}/.zgenom"
+if [[ -d "${zgenom_dir}" ]]; then
+  yellow "Zgenom is already cloned.  Skipping clone"
 else
-  yellow "Cloning Zgen into $HOME/.zgen"
-  git clone https://github.com/brandon-fryslie/zgen.git "$HOME/.zgen"
+  yellow "Cloning Zgenom into ${zgenom_dir}"
+  git clone https://github.com/jandamm/zgenom.git "${zgenom_dir}"
 fi
 
 curl --fail -o /tmp/rad-init.zsh "https://raw.githubusercontent.com/brandon-fryslie/rad-shell/${RAD_BRANCH:-master}/rad-init.zsh"
 
-rad_repo_path="$HOME/.zgen/brandon-fryslie/rad-shell-master"
+rad_repo_path="${zgenom_dir}/brandon-fryslie/rad-shell/___"
 # install plugin repos, then symlink the rad-shell repo into ~/.rad-shell
 zsh -c "source /tmp/rad-init.zsh"
 ln -s "$rad_repo_path" "$HOME/.rad-shell" || abort "Error: Cannot symlink rad-shell repo to ~/.rad-shell"
