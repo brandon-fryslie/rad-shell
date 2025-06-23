@@ -91,7 +91,7 @@ fi
 
 curl --fail -o /tmp/rad-init.zsh "https://raw.githubusercontent.com/brandon-fryslie/rad-shell/${RAD_BRANCH:-master}/rad-init.zsh"
 
-rad_repo_path="${zgenom_dir}/brandon-fryslie/rad-shell/___"
+rad_repo_path="${zgenom_dir}/sources/brandon-fryslie/rad-shell/___"
 # install plugin repos, then symlink the rad-shell repo into ~/.rad-shell
 zsh -c "source /tmp/rad-init.zsh"
 ln -s "$rad_repo_path" "$HOME/.rad-shell" || abort "Error: Cannot symlink rad-shell repo to ~/.rad-shell"
