@@ -86,7 +86,7 @@ if [[ -d "${zgenom_dir}" ]]; then
   yellow "Zgenom is already cloned.  Skipping clone"
 else
   yellow "Cloning Zgenom into ${zgenom_dir}"
-  git clone https://github.com/jandamm/zgenom.git "${zgenom_dir}"
+  git clone https://github.com/brandon-fryslie/zgenom.git "${zgenom_dir}"
 fi
 
 curl --fail -o /tmp/rad-init.zsh "https://raw.githubusercontent.com/brandon-fryslie/rad-shell/${RAD_BRANCH:-master}/rad-init.zsh"
