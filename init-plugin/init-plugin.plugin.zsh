@@ -123,7 +123,7 @@ rad-get-editor() {
 
 ### rad-shell dependency loader and validator ###
 #################################################
-source "$(dirname "$0")/zsh_deps_main.sh"
+#source "$(dirname "$0")/zsh_deps_main.sh"
 
 
 ### rad-shell bin path configuration ###
