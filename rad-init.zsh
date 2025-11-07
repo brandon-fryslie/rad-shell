@@ -1,6 +1,8 @@
 ### rad-shell init file
 ### handles setting up zgenom (or zgen) to make life simpler
 
+: "${RAD_PLUGINS_FILE:="${HOME}/.rad-plugins"}"
+
 # Set up a global var to store init errors
 typeset -g _rad_init_err
 
@@ -58,9 +60,6 @@ _rad_pre_init() {
 
   # Configure $ZGEN_RESET_ON_CHANGE
 
-  # Any changes to this path require recompiling the init file
-  local rad_plugins_file_path="${HOME}/.rad-plugins"
-
   # If it's not an array, and it contains a value, store the value
   # Then declare the variable as a global array and re-add the temp value if there was one
   if [[ "${(t)ZGEN_RESET_ON_CHANGE}" != "array" ]]; then
@@ -73,7 +72,7 @@ _rad_pre_init() {
   fi
 
   # Finally, add the .rad-plugins file path
-  ZGEN_RESET_ON_CHANGE+=($rad_plugins_file_path)
+  ZGEN_RESET_ON_CHANGE+=($RAD_PLUGINS_FILE)
 
   # Plugins can register an init hook that will be called after all plugins are loaded
   # This allows us to avoid module load order dependencies by delaying initialization until dependencies have all been loaded
@@ -142,18 +141,16 @@ if [[ -z $_rad_init_error ]] && ! zgenom saved; then
   zgenom load ohmyzsh/ohmyzsh lib/prompt_info_functions.zsh
   zgenom load ohmyzsh/ohmyzsh lib/theme-and-appearance.zsh
 
-  # Here is where we load plugins from $HOME/.rad-plugins
+  # Here is where we load plugins from RAD_PLUGINS_FILE (defaults to $HOME/.rad-plugins)
   while read -r line; do
     if [[ ! $line =~ '^#' ]] && [[ ! $line == '' ]]; then
       echo "rad-shell: Loading plugin: $line"
       eval "zgenom load $line"
     fi
-  done < "$HOME/.rad-plugins"
+  done < "$RAD_PLUGINS_FILE"
 
 
-  local zgenom_save_args=""
-  [[ "${ZGENOM_ENABLE_COMPILE:-1}" != 1 ]] && zgenom_save_args+="--no-compile"
-  time zgenom save "${zgenom_save_args}"
+  time zgenom save --no-compile
 fi
 
 # Execute the init hooks.  This gives plugins a way to execute code after all other plugins are loaded
