@@ -12,6 +12,8 @@ yellow() { echo -e "$(colorize 33 "$@")"; }
 
 script_dir="$( cd "$( dirname "${0:a:h}" )" && pwd )"
 
+: ${RAD_PLUGINS_FILE_PATH:="${HOME}/.rad-plugins"}
+
 # Command functions
 
 # TODO
@@ -30,7 +32,7 @@ byebye-cmd() {
   mv -f ~/.zshrc $zshrc_bak
   rm -rf ~/.zgen
   rm -rf ~/.rad-shell
-  rm -rf ~/.rad-plugins
+  rm -rf "${RAD_PLUGINS_FILE_PATH}"
   green "Byebye!"
 }
 

@@ -31,10 +31,10 @@ source $HOME/.rad-shell/rad-init.zsh
 
 EOSCRIPT
 
-rad_plugins_file="$HOME/.rad-plugins"
+: ${RAD_PLUGINS_FILE_PATH:="${HOME}/.rad-plugins"}
 
 write-default-plugins-file() {
-  cat <<-EOSCRIPT > "$rad_plugins_file"
+  cat <<-EOSCRIPT > "$RAD_PLUGINS_FILE_PATH"
 # Load Homebrew near the top
 brandon-fryslie/rad-plugins homebrew
 
@@ -74,10 +74,10 @@ EOSCRIPT
 }
 
 if [[ ${SKIP_DEFAULT_PLUGINS:-false} == true ]]; then
-  yellow "Skipping install of default plugins.  Creating empty $rad_plugins_file"
-  touch "$rad_plugins_file"
+  yellow "Skipping install of default plugins.  Creating empty $RAD_PLUGINS_FILE_PATH"
+  touch "$RAD_PLUGINS_FILE_PATH"
 else
-  yellow "Writing $rad_plugins_file with default plugins"
+  yellow "Writing $RAD_PLUGINS_FILE_PATH with default plugins"
   write-default-plugins-file
 fi
 

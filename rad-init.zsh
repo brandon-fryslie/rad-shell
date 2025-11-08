@@ -4,6 +4,14 @@
 # Set up a global var to store init errors
 typeset -g _rad_init_err
 
+# Plugins can register an init hook that will be called after all plugins are loaded
+# This allows us to avoid module load order dependencies by delaying initialization until dependencies have all been loaded
+typeset -ga rad_plugin_init_hooks
+
+# Ensure we have a path defined to load our plugins from.  Defaults to ~/.rad-plugins but users can change this
+: ${RAD_PLUGINS_FILE_PATH:="${HOME}/.rad-plugins"}
+: "${RAD_INIT_DEFAULTS_OVERRIDE:="${HOME/.config/rad-shell/rad-init-defaults.override.zsh}"}"
+
 # define our rad-debug command
 rad-debug() {
   [[ -z $RAD_DEBUG ]] && return
@@ -56,10 +64,7 @@ _rad_pre_init() {
   # Initialize the completion engine
   ZGEN_AUTOLOAD_COMPINIT=1
 
-  # Configure $ZGEN_RESET_ON_CHANGE
-
-  # Any changes to this path require recompiling the init file
-  local rad_plugins_file_path="${HOME}/.rad-plugins"
+  ### Configure $ZGEN_RESET_ON_CHANGE
 
   # If it's not an array, and it contains a value, store the value
   # Then declare the variable as a global array and re-add the temp value if there was one
@@ -73,11 +78,9 @@ _rad_pre_init() {
   fi
 
   # Finally, add the .rad-plugins file path
-  ZGEN_RESET_ON_CHANGE+=($rad_plugins_file_path)
+  ZGEN_RESET_ON_CHANGE+=($RAD_PLUGINS_FILE_PATH)
 
-  # Plugins can register an init hook that will be called after all plugins are loaded
-  # This allows us to avoid module load order dependencies by delaying initialization until dependencies have all been loaded
-  typeset -ga rad_plugin_init_hooks
+  ### // Configure $ZGEN_RESET_ON_CHANGE
 
   zstyle ':prezto:module:terminal' auto-title 'yes'
   zstyle ':prezto:module:terminal:window-title' format '%n@%m'
@@ -118,8 +121,11 @@ _rad_handle_zgenom_migration
 _rad_pre_init
 _rad_zg_init
 
-# if the init scipt doesn't exist
-if [[ -z $_rad_init_error ]] && ! zgenom saved; then
+# This function contains the default zsh plugin config for rad-shell.  these are foundational plugins on which
+# others depend.  Users can override the entire zsh plugin initialization process, but if they do so they will need to call
+# this function to make the config avaialble.  this will allow users to replace all of the defaults if they want, but make it easy
+# to get both the defaults + the ability to execute arbitrary configuration code
+rad_zplugin_config_default() {
   # TODO: allow executing arbitary code here
   # We will implement this when we have decided on a better path than
   # dumping everything in $HOME
@@ -142,18 +148,25 @@ if [[ -z $_rad_init_error ]] && ! zgenom saved; then
   zgenom load ohmyzsh/ohmyzsh lib/prompt_info_functions.zsh
   zgenom load ohmyzsh/ohmyzsh lib/theme-and-appearance.zsh
 
-  # Here is where we load plugins from $HOME/.rad-plugins
+}
+
+# if the init scipt doesn't exist
+if [[ -z $_rad_init_error ]] && ! zgenom saved; then
+  if [[ -f "${RAD_INIT_DEFAULTS_OVERRIDE}" ]]; then
+    source "${RAD_INIT_DEFAULTS_OVERRIDE}"
+  else
+    rad_zplugin_config_default
+  fi
+
+  # Here is where we load plugins from ${RAD_PLUGINS_FILE} (defaults to ~/.rad-plugins)
   while read -r line; do
     if [[ ! $line =~ '^#' ]] && [[ ! $line == '' ]]; then
       echo "rad-shell: Loading plugin: $line"
       eval "zgenom load $line"
     fi
-  done < "$HOME/.rad-plugins"
+  done < "${RAD_PLUGINS_FILE_PATH}"
 
-
-  local zgenom_save_args=""
-  [[ "${ZGENOM_ENABLE_COMPILE:-1}" != 1 ]] && zgenom_save_args+="--no-compile"
-  time zgenom save "${zgenom_save_args}"
+  time zgenom save --no-compile
 fi
 
 # Execute the init hooks.  This gives plugins a way to execute code after all other plugins are loaded
